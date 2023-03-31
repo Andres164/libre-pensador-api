@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
-namespace libre_pansador_api.Db;
+namespace libre_pansador_api.Models;
 
 public partial class CafeLibrePensadorDbContext : DbContext
 {
