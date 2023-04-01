@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Repositorios\\libre-pensador-api\\libre-pansador-api\\libre-pansador-api\\libre-pansador-api.csproj": {}
+    "C:\\Repositories\\libre-pensador-api\\libre-pansador-api\\libre-pansador-api\\libre-pansador-api.csproj": {}
   },
   "projects": {
-    "D:\\Repositorios\\libre-pensador-api\\libre-pansador-api\\libre-pansador-api\\libre-pansador-api.csproj": {
+    "C:\\Repositories\\libre-pensador-api\\libre-pansador-api\\libre-pansador-api\\libre-pansador-api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Repositorios\\libre-pensador-api\\libre-pansador-api\\libre-pansador-api\\libre-pansador-api.csproj",
+        "projectUniqueName": "C:\\Repositories\\libre-pensador-api\\libre-pansador-api\\libre-pansador-api\\libre-pansador-api.csproj",
         "projectName": "libre-pansador-api",
-        "projectPath": "D:\\Repositorios\\libre-pensador-api\\libre-pansador-api\\libre-pansador-api\\libre-pansador-api.csproj",
-        "packagesPath": "C:\\Users\\Acerita\\.nuget\\packages\\",
-        "outputPath": "D:\\Repositorios\\libre-pensador-api\\libre-pansador-api\\libre-pansador-api\\obj\\",
+        "projectPath": "C:\\Repositories\\libre-pensador-api\\libre-pansador-api\\libre-pansador-api\\libre-pansador-api.csproj",
+        "packagesPath": "C:\\Users\\Ballo\\.nuget\\packages\\",
+        "outputPath": "C:\\Repositories\\libre-pensador-api\\libre-pansador-api\\libre-pansador-api\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Acerita\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Ballo\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -69,7 +69,8 @@
             "net47",
             "net471",
             "net472",
-            "net48"
+            "net48",
+            "net481"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -81,7 +82,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.300\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
         }
       }
     }

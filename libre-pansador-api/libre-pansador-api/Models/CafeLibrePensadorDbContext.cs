@@ -40,7 +40,7 @@ public partial class CafeLibrePensadorDbContext : DbContext
 
         modelBuilder.Entity<Customer>(entity =>
         {
-            entity.HasKey(e => new { e.Email, e.DateOfBirth }).HasName("customers_pkey");
+            entity.HasKey(e => e.Email).HasName("customers_pkey");
 
             entity.ToTable("customers");
 

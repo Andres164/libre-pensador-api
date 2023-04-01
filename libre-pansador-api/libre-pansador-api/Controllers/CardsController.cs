@@ -8,22 +8,28 @@ namespace libre_pansador_api.Controllers
     [ApiController]
     public class CardsController : ControllerBase
     {
-        // GET api/Cards/5
+        // GET api/Cards/QR00005
         [HttpGet("{id}")]
         [ProducesResponseType(200, Type = typeof(Models.Card))]
         [ProducesResponseType(400)]
-        public IActionResult Get(int id)
+        public IActionResult Get(string id)
         {
-            
+            Models.Card? card = CRUD.Cards.read(id);
+            if(card == null)
+                return NotFound();
+            return Ok(card);
         }
 
-        // PUT api/Cards/5
+        // PUT api/Cards/QR00005
         [HttpPut("{id}")]
         [ProducesResponseType(200, Type = typeof(Models.Card))]
         [ProducesResponseType(400)]
-        public IActionResult Put(int id, [FromBody])
+        public IActionResult Put(string id, string customerEmail)
         {
-            
+            Models.Card? updatedCard = CRUD.Cards.update(id, customerEmail);
+            if(updatedCard == null) 
+                return NotFound();
+            return Ok(updatedCard);
         }
     }
 }
