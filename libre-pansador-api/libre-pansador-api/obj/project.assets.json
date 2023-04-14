@@ -10382,7 +10382,7 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Ballo\\.nuget\\packages\\": {}
+    "C:\\Users\\Baio\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
@@ -10390,11 +10390,11 @@
       "projectUniqueName": "C:\\Repositories\\libre-pensador-api\\libre-pansador-api\\libre-pansador-api\\libre-pansador-api.csproj",
       "projectName": "libre-pansador-api",
       "projectPath": "C:\\Repositories\\libre-pensador-api\\libre-pansador-api\\libre-pansador-api\\libre-pansador-api.csproj",
-      "packagesPath": "C:\\Users\\Ballo\\.nuget\\packages\\",
+      "packagesPath": "C:\\Users\\Baio\\.nuget\\packages\\",
       "outputPath": "C:\\Repositories\\libre-pensador-api\\libre-pansador-api\\libre-pansador-api\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Ballo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Baio\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [

@@ -24,7 +24,7 @@ namespace libre_pansador_api.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(200, Type = typeof(Models.Card))]
         [ProducesResponseType(400)]
-        public IActionResult Put(string id, string customerEmail)
+        public IActionResult Put(string id, [FromBody] string customerEmail)
         {
             Models.Card? updatedCard = CRUD.Cards.update(id, customerEmail);
             if(updatedCard == null) 
