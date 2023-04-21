@@ -1,0 +1,12 @@
+It appears the Loyverse API documentation has changed since my knowledge cutoff. In that case, you can indeed use the POST /customers endpoint for updating customers as well.
+
+To update the total_points field for a customer, you only need to send the customer's id and total_points in the request body. Here's an example of what the JSON body for updating total_points might look like:
+
+json
+
+{
+  "id": "some-customer-id",
+  "total_points": 100
+}
+
+Since the id field is included, the API will understand that you want to update the customer with that ID, and it will only update the total_points field, as that's the only other field provided in the JSON body. Other customer fields will remain unchanged.

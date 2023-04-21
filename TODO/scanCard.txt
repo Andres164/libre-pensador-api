@@ -1,0 +1,5 @@
+scan card
+fetch card in the local db
+fetch the customer in loyverse api
+return customer to the client app( add DoB stored in the local database before returning )
+fill customer form

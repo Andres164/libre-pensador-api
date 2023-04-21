@@ -10,6 +10,6 @@ public partial class Customer
     public string Name { get; set; } = null!;
     public string Phone { get; set; } = null!;
     public string Address { get; set; } = null!;
-    public int total_points { get; set; } = 0;
+    public int TotalPoints { get; set; } = 0;
     public DateTime DateOfBirth { get; set; }
 }

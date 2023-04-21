@@ -1,0 +1,6 @@
+scan card
+query the database for the scanned card
+if found and linked to a customer (customer_email not null) 
+fill customer form with customer data
+make POST request to loyverse API: send customer_id and total_points in the request body
+inform the user of request response
