@@ -7,14 +7,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(name: AllowSpecificOrigins,
-                      policy =>
-                      {
-                          policy.WithOrigins("https://localhost:80",
-                                             "http://localhost:80")
-                                .AllowAnyHeader()
-                                .AllowAnyMethod();
-                      });
+    options.AddPolicy(AllowSpecificOrigins, 
+    policy =>
+    {
+        policy.WithOrigins("https://localhost:443", "http://localhost:80", "https://localhost")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
 });
 
 builder.Services.AddControllers();
