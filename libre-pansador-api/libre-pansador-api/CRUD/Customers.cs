@@ -1,4 +1,5 @@
 ﻿using libre_pansador_api.Loyverse;
+using Microsoft.EntityFrameworkCore;
 
 namespace libre_pansador_api.CRUD
 {
@@ -8,37 +9,34 @@ namespace libre_pansador_api.CRUD
 
         public Customers()
         {
-            string loyverseAccessToken = "";
+            string loyverseAccessToken = "3d58c3cab85a41e7a396dbffac531707";
             this._loyverseApiClient = new LoyverseApiClient(new HttpClient(), loyverseAccessToken);
         }
 
-        public async Task<Models.Customer?> ReadAsync(string customerId)
+        public async Task<Models.Customer?> ReadAsync(string customerEmail)
         {
             using (var dbContext = new Models.CafeLibrePensadorDbContext())
             {
-                var localCustomer = dbContext.Customers.Find(customerId);
-                if (localCustomer == null)
-                {
+                var fetchCustomer = dbContext.Customers.FirstOrDefaultAsync(c => c.Email == customerEmail);
+                Models.Customer? customer = fetchCustomer.Result;
+                if (customer == null)
                     return null;
-                }
-
                 try
                 {
-                    var loyverseCustomerInfo = await _loyverseApiClient.GetCustomerInfoAsync(customerId);
-
-                    // Merge the data from both APIs here
-                    // For example, you can add the address and total points from the Loyverse API to your local customer data
-
-                    localCustomer.Address = loyverseCustomerInfo.address;
-                    localCustomer.TotalPoints = loyverseCustomerInfo.total_points;
+                    var loyverseCustomerInfo = await _loyverseApiClient.GetCustomerInfoAsync(customer.LoyverseCustomerId);
+                    if(loyverseCustomerInfo == null)
+                    {
+                        Console.WriteLine("Couldn't find the customer in the loyverse API");
+                        return null;
+                    }
+                    loyverseCustomerInfo.DateOfBirth = customer.DateOfBirth;
                 }
                 catch (Exception ex)
                 {
-                    // Handle errors while fetching data from the Loyverse API
                     Console.WriteLine("Error fetching data from Loyverse API: " + ex.Message);
+                    return null;
                 }
-
-                return localCustomer;
+                return customer;
             }
         }
 

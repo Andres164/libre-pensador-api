@@ -14,7 +14,8 @@ namespace libre_pansador_api.Controllers
         [ProducesResponseType(400)]
         public IActionResult Get(string id)
         {
-            Models.Customer? customer = CRUD.Customers.read(id);
+            var customers = new CRUD.Customers();
+            Task<Models.Customer?> customer = customers.ReadAsync(id);
             if(customer == null)
                 return NotFound();
             return Ok(customer);
