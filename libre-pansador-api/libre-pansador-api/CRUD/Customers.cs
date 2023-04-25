@@ -17,8 +17,7 @@ namespace libre_pansador_api.CRUD
         {
             using (var dbContext = new Models.CafeLibrePensadorDbContext())
             {
-                var fetchCustomer = dbContext.Customers.FirstOrDefaultAsync(c => c.Email == customerEmail);
-                Models.Customer? customer = fetchCustomer.Result;
+                Models.Customer? customer = dbContext.Customers.Find(customerEmail);
                 if (customer == null)
                     return null;
                 try
