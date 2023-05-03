@@ -49,11 +49,11 @@ namespace libre_pansador_api.CRUD
             }
         }
 
-        public static Models.Customer? delete(string customer_id)
+        public static Models.Customer? delete(string customerEmail)
         {
             using(var dbContext = new Models.CafeLibrePensadorDbContext())
             {
-                Models.Customer? customerToDelete = dbContext.Customers.Find(customer_id);
+                Models.Customer? customerToDelete = dbContext.Customers.Find(customerEmail);
                 if (customerToDelete == null)
                     return null;
                 dbContext.Customers.Remove(customerToDelete);

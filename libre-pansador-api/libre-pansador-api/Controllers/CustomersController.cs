@@ -31,12 +31,12 @@ namespace libre_pansador_api.Controllers
         }
 
         // DELETE api/Clients/email@hotmail.com
-        [HttpDelete("{id}")]
+        [HttpDelete("{email}")]
         [ProducesResponseType(200, Type = typeof(Models.Customer))]
         [ProducesResponseType(400)]
-        public IActionResult Delete(string id)
+        public IActionResult Delete(string email)
         {
-            Models.Customer? deletedCustomer = CRUD.Customers.delete(id);
+            Models.Customer? deletedCustomer = CRUD.Customers.delete(email);
             if (deletedCustomer == null)
                 return NotFound();
             return Ok(deletedCustomer);

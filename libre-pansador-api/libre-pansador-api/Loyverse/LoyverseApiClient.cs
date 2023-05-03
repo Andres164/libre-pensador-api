@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using libre_pansador_api.Loyverse.Models;
 using Newtonsoft.Json;
 
 namespace libre_pansador_api.Loyverse
@@ -16,7 +17,7 @@ namespace libre_pansador_api.Loyverse
             _accessToken = accessToken;
         }
 
-        public async Task<dynamic?> GetCustomerInfoAsync(string customerId)
+        public async Task<Customer?> GetCustomerInfoAsync(string customerId)
         {
             var request = new HttpRequestMessage(HttpMethod.Get, $"https://api.loyverse.com/v1.0/customers/{customerId}");
             request.Headers.Add("Authorization", $"Bearer {_accessToken}");
@@ -31,7 +32,7 @@ namespace libre_pansador_api.Loyverse
                 return null;
             try
             {
-                return JsonConvert.DeserializeObject<dynamic>(content);
+                return JsonConvert.DeserializeObject<Customer>(content);
             }
             catch (JsonException ex)
             {
