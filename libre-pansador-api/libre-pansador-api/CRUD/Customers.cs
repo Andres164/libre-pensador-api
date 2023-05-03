@@ -1,4 +1,5 @@
 ﻿using libre_pansador_api.Loyverse;
+using libre_pansador_api.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace libre_pansador_api.CRUD
@@ -13,7 +14,7 @@ namespace libre_pansador_api.CRUD
             this._loyverseApiClient = new LoyverseApiClient(new HttpClient(), loyverseAccessToken);
         }
 
-        public async Task<Models.Customer?> ReadAsync(string customerEmail)
+        public async Task<Models.MergedCustomer?> ReadAsync(string customerEmail)
         {
             using (var dbContext = new Models.CafeLibrePensadorDbContext())
             {
@@ -28,14 +29,13 @@ namespace libre_pansador_api.CRUD
                         Console.WriteLine("Couldn't find the customer in the loyverse API");
                         return null;
                     }
-                    loyverseCustomerInfo.DateOfBirth = customer.DateOfBirth;
+                    return new MergedCustomer(customer, loyverseCustomerInfo);
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine("Error fetching data from Loyverse API: " + ex.Message);
                     return null;
                 }
-                return customer;
             }
         }
 

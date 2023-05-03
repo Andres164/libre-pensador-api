@@ -9,16 +9,16 @@ namespace libre_pansador_api.Controllers
     public class CustomersController : ControllerBase
     {
         // GET api/Clients/email@hotmail.com
-        [HttpGet("{id}")]
-        [ProducesResponseType(200, Type = typeof(Models.Customer))]
+        [HttpGet("{email}")]
+        [ProducesResponseType(200, Type = typeof(Models.MergedCustomer))]
         [ProducesResponseType(400)]
-        public IActionResult Get(string id)
+        public IActionResult Get(string email)
         {
             var customers = new CRUD.Customers();
-            Task<Models.Customer?> customer = customers.ReadAsync(id);
-            if(customer == null)
+            Task<Models.MergedCustomer?> customer = customers.ReadAsync(email);
+            if(customer.Result == null)
                 return NotFound();
-            return Ok(customer);
+            return Ok(customer.Result);
         }
 
         // POST api/Clients

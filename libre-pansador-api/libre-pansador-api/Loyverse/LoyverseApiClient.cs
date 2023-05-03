@@ -16,7 +16,7 @@ namespace libre_pansador_api.Loyverse
             _accessToken = accessToken;
         }
 
-        public async Task<dynamic> GetCustomerInfoAsync(string customerId)
+        public async Task<dynamic?> GetCustomerInfoAsync(string customerId)
         {
             var request = new HttpRequestMessage(HttpMethod.Get, $"https://api.loyverse.com/v1.0/customers/{customerId}");
             request.Headers.Add("Authorization", $"Bearer {_accessToken}");
@@ -24,12 +24,19 @@ namespace libre_pansador_api.Loyverse
             var response = await _httpClient.SendAsync(request);
 
             if (!response.IsSuccessStatusCode)
-            {
                 throw new Exception("Failed to fetch customer info from Loyverse API");
-            }
 
             var content = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<dynamic>(content);
+            if (string.IsNullOrEmpty(content))
+                return null;
+            try
+            {
+                return JsonConvert.DeserializeObject<dynamic>(content);
+            }
+            catch (JsonException ex)
+            {
+                throw new Exception("Failed to deserialize customer info", ex);
+            }
         }
     }
 

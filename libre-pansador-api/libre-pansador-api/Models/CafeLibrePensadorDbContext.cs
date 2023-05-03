@@ -48,6 +48,9 @@ public partial class CafeLibrePensadorDbContext : DbContext
                 .HasMaxLength(100)
                 .HasColumnName("email");
             entity.Property(e => e.DateOfBirth).HasColumnName("date_of_birth");
+            entity.Property(e => e.LoyverseCustomerId)
+                .HasMaxLength(150)
+                .HasColumnName("loyverse_customer_id");
         });
 
         OnModelCreatingPartial(modelBuilder);
