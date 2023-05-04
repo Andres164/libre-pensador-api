@@ -1,10 +1,15 @@
 using libre_pansador_api.Converters;
+using libre_pansador_api.Loyverse;
 using Microsoft.AspNetCore.Authorization;
+using System.Net.Http.Headers;
 using System.Security.Cryptography;
 
 const string AllowSpecificOrigins = "AllowSpecificOrigins";
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration.AddJsonFile("appsettings.json");
+builder.Services.AddScoped<libre_pansador_api.CRUD.Customers>();
 
 builder.Services.AddCors(options =>
 {
@@ -18,10 +23,19 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddControllers().AddJsonOptions(options =>
+builder.Services.AddHttpClient<LoyverseApiClient>(client =>
 {
-    options.JsonSerializerOptions.Converters.Add(new DateOnlyConverter());
+    var accessToken = builder.Configuration["Loyverse:AccessToken"];
+    client.BaseAddress = new Uri("https://api.loyverse.com/");
+    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 });
+
+builder.Services.AddControllers()
+    .AddApplicationPart(typeof(LoyverseController).Assembly)
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new DateOnlyConverter());
+    });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

@@ -3,11 +3,11 @@ using System.Xml.Linq;
 
 namespace libre_pansador_api.Models
 {
-    public class MergedCustomer : Loyverse.Models.Customer
+    public class MergedCustomer : Loyverse.Models.LoyverseCustomer
     {
         public DateOnly DateOfBirth { get; set; }
 
-        public MergedCustomer(Models.Customer localCustomer, Loyverse.Models.Customer loyverseCustomer)
+        public MergedCustomer(Models.LocalCustomer localCustomer, Loyverse.Models.LoyverseCustomer loyverseCustomer)
         {
             this.LoyverseCustomerId = loyverseCustomer.LoyverseCustomerId;
             this.Name = loyverseCustomer.Name;

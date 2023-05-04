@@ -8,17 +8,16 @@ namespace libre_pansador_api.CRUD
     {
         private readonly LoyverseApiClient _loyverseApiClient;
 
-        public Customers()
+        public Customers(LoyverseApiClient loyverseApiClient)
         {
-            string loyverseAccessToken = "3d58c3cab85a41e7a396dbffac531707";
-            this._loyverseApiClient = new LoyverseApiClient(new HttpClient(), loyverseAccessToken);
+            this._loyverseApiClient = loyverseApiClient;
         }
 
         public async Task<Models.MergedCustomer?> ReadAsync(string customerEmail)
         {
             using (var dbContext = new Models.CafeLibrePensadorDbContext())
             {
-                Models.Customer? customer = dbContext.Customers.Find(customerEmail);
+                Models.LocalCustomer? customer = dbContext.Customers.Find(customerEmail);
                 if (customer == null)
                     return null;
                 try
@@ -39,7 +38,7 @@ namespace libre_pansador_api.CRUD
             }
         }
 
-        public static Models.Customer? create(Models.Customer newCustomer)
+        public static Models.LocalCustomer? create(Models.LocalCustomer newCustomer)
         {
             using(var dbContext = new Models.CafeLibrePensadorDbContext())
             {
@@ -49,11 +48,11 @@ namespace libre_pansador_api.CRUD
             }
         }
 
-        public static Models.Customer? delete(string customerEmail)
+        public static Models.LocalCustomer? delete(string customerEmail)
         {
             using(var dbContext = new Models.CafeLibrePensadorDbContext())
             {
-                Models.Customer? customerToDelete = dbContext.Customers.Find(customerEmail);
+                Models.LocalCustomer? customerToDelete = dbContext.Customers.Find(customerEmail);
                 if (customerToDelete == null)
                     return null;
                 dbContext.Customers.Remove(customerToDelete);

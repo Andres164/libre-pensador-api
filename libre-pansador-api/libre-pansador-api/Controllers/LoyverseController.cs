@@ -14,8 +14,8 @@ public class LoyverseController : ControllerBase
     }
 
     // GET api/loyverse/customers/email@mail.com
-    [HttpGet("customer/{email}")]
-    [ProducesResponseType(200, Type = typeof(Customer))]
+    [HttpGet("customers/{email}")]
+    [ProducesResponseType(200, Type = typeof(LoyverseCustomer))]
     [ProducesResponseType(400)]
     public async Task<IActionResult> GetCustomerByEmailAsync(string email)
     {
@@ -32,7 +32,7 @@ public class LoyverseController : ControllerBase
         }
         catch (Exception ex)
         {
-            return StatusCode(500, "An error occurred while fetching the customer from the Loyverse API");
+            return StatusCode(500, "An error occurred while fetching the customer from the Loyverse API: " + ex);
         }
     }
 

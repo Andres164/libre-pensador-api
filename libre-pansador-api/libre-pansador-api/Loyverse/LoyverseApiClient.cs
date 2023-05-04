@@ -11,13 +11,13 @@ namespace libre_pansador_api.Loyverse
         private readonly HttpClient _httpClient;
         private readonly string _accessToken;
 
-        public LoyverseApiClient(HttpClient httpClient, string accessToken)
+        public LoyverseApiClient(HttpClient httpClient, IConfiguration configuration)
         {
             _httpClient = httpClient;
-            _accessToken = accessToken;
+            _accessToken = configuration["Loyverse:AccessToken"] ?? string.Empty;
         }
 
-        public async Task<Customer?> GetCustomerInfoAsync(string customerId)
+        public async Task<LoyverseCustomer?> GetCustomerInfoAsync(string customerId)
         {
             var request = new HttpRequestMessage(HttpMethod.Get, $"https://api.loyverse.com/v1.0/customers/{customerId}");
             request.Headers.Add("Authorization", $"Bearer {_accessToken}");
@@ -32,7 +32,7 @@ namespace libre_pansador_api.Loyverse
                 return null;
             try
             {
-                return JsonConvert.DeserializeObject<Customer>(content);
+                return JsonConvert.DeserializeObject<LoyverseCustomer>(content);
             }
             catch (JsonException ex)
             {
@@ -40,7 +40,7 @@ namespace libre_pansador_api.Loyverse
             }
         }
 
-        public async Task<List<Customer>?> GetAllCustomersAsync()
+        public async Task<List<LoyverseCustomer>?> GetAllCustomersAsync()
         {
             var request = new HttpRequestMessage(HttpMethod.Get, "https://api.loyverse.com/v1.0/customers");
             request.Headers.Add("Authorization", $"Bearer {_accessToken}");
@@ -52,10 +52,9 @@ namespace libre_pansador_api.Loyverse
             var content = await response.Content.ReadAsStringAsync();
             if (string.IsNullOrEmpty(content))
                 return null;
-
             try
             {
-                return JsonConvert.DeserializeObject<List<Customer>>(content);
+                return JsonConvert.DeserializeObject<List<LoyverseCustomer>>(content);
             }
             catch (JsonException ex)
             {

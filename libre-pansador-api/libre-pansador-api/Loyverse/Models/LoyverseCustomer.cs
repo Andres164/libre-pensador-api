@@ -1,8 +1,10 @@
 ﻿using Newtonsoft.Json;
+using System.Runtime.Serialization;
 
 namespace libre_pansador_api.Loyverse.Models
 {
-    public class Customer
+    [DataContract(Name = "LoyverseCustomer")]
+    public class LoyverseCustomer
     {
         [JsonProperty("id")]
         public string LoyverseCustomerId { get; set; } = null!;
