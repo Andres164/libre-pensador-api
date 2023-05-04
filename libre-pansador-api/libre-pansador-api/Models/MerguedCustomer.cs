@@ -5,7 +5,7 @@ namespace libre_pansador_api.Models
 {
     public class MergedCustomer : Loyverse.Models.Customer
     {
-        public DateTime DateOfBirth { get; set; }
+        public DateOnly DateOfBirth { get; set; }
 
         public MergedCustomer(Models.Customer localCustomer, Loyverse.Models.Customer loyverseCustomer)
         {
