@@ -54,7 +54,11 @@ namespace libre_pansador_api.Loyverse
                 return null;
             try
             {
-                return JsonConvert.DeserializeObject<List<LoyverseCustomer>>(content);
+                var responseObject = JsonConvert.DeserializeObject<LoyverseCustomersResponse>(content);
+                if (responseObject != null)
+                    return responseObject.Customers;
+
+                return null;
             }
             catch (JsonException ex)
             {

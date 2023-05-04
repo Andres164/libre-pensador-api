@@ -25,7 +25,7 @@ public class LoyverseController : ControllerBase
             if (customers == null || !customers.Any())
                 return NotFound();
 
-            var customer = customers.FirstOrDefault(c => c.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
+            var customer = customers.FirstOrDefault(c => c != null && c.Email != null && c.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
             if (customer == null)
                 return NotFound();
             return Ok(customer);
