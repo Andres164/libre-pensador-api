@@ -45,14 +45,14 @@ public class LoyverseController : ControllerBase
     {
         try
         {
-            var customer = await this._loyverseApiClient.GetCustomerInfoAsync(loyverseCustomerId);
-            if (customer == null) 
-                return NotFound();
-            float updatedTotalPoints = customer.TotalPoints + pointsToAdd;
-            float? newPointBalance = await this._loyverseApiClient.UpdateCustomerPoints(loyverseCustomerId, customer.Name, updatedTotalPoints);
+            float? newPointBalance = await this._loyverseApiClient.AddPointsToCustomer(loyverseCustomerId, pointsToAdd);
             if (newPointBalance == null)
                 return NotFound();
             return Ok(newPointBalance);
+        }
+        catch(HttpRequestException ex)
+        {
+            return StatusCode(502, ex.Message);
         }
         catch(Exception ex) 
         {
