@@ -17,6 +17,7 @@ public class LoyverseController : ControllerBase
     [HttpGet("customers/{email}")]
     [ProducesResponseType(200, Type = typeof(LoyverseCustomer))]
     [ProducesResponseType(400)]
+    [ProducesResponseType(500)]
     public async Task<IActionResult> GetCustomerByEmailAsync(string email)
     {
         try
@@ -36,5 +37,27 @@ public class LoyverseController : ControllerBase
         }
     }
 
+    // PUT api/loyverse/customers/{LoyverseCustomerId}
+    [HttpPut("customers/{loyverseCustomerId}")]
+    [ProducesResponseType(200, Type = typeof(float))]
+    [ProducesResponseType(400)]
+    public async Task<IActionResult> AddPointsToCustomer(string loyverseCustomerId, [FromBody] float pointsToAdd)
+    {
+        try
+        {
+            var customer = await this._loyverseApiClient.GetCustomerInfoAsync(loyverseCustomerId);
+            if (customer == null) 
+                return NotFound();
+            float updatedTotalPoints = customer.TotalPoints + pointsToAdd;
+            float? newPointBalance = await this._loyverseApiClient.UpdateCustomerPoints(loyverseCustomerId, customer.Name, updatedTotalPoints);
+            if (newPointBalance == null)
+                return NotFound();
+            return Ok(newPointBalance);
+        }
+        catch(Exception ex) 
+        {
+            return StatusCode(500, "An error occurred while updating the customer of the Loyverse API: " + ex);
+        }
+    }
 }
 
