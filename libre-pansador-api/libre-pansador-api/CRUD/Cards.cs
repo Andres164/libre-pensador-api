@@ -10,7 +10,7 @@
             }
         }
 
-        public static Models.Card? update(string card_id, string updatedEmail)
+        public static Models.Card? update(string card_id, string? updatedEmail)
         {
             using (var dbContext = new Models.CafeLibrePensadorDbContext())
             {

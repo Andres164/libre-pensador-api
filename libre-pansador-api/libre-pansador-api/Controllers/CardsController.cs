@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using libre_pansador_api.Models.RequestModels;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -24,9 +25,9 @@ namespace libre_pansador_api.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(200, Type = typeof(Models.Card))]
         [ProducesResponseType(400)]
-        public IActionResult Put(string id, [FromBody] string customerEmail)
+        public IActionResult Put(string id, [FromBody] UpdateCardRequest requestBody)
         {
-            Models.Card? updatedCard = CRUD.Cards.update(id, customerEmail);
+            Models.Card? updatedCard = CRUD.Cards.update(id, requestBody.CustomerEmail);
             if(updatedCard == null) 
                 return NotFound();
             return Ok(updatedCard);
