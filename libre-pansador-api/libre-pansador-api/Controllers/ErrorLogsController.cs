@@ -1,9 +1,12 @@
 ﻿using libre_pansador_api.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MimeKit;
 
 namespace libre_pansador_api.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class ErrorLogsController : ControllerBase
     {
         private readonly EmailService _emailService;
@@ -15,7 +18,7 @@ namespace libre_pansador_api.Controllers
             this._recipientMailBoxAdress = recipientMailBoxAddress;
         }
 
-        [HttpPost("api/send-error-log")]
+        [HttpPost("send-error-log")]
         public async Task<IActionResult> SendErrorLog([FromBody] string errorLog)
         {
             try

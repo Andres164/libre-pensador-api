@@ -32,6 +32,7 @@ namespace libre_pansador_api.Controllers
         // POST api/Clients
         [HttpPost]
         [ProducesResponseType(200, Type = typeof(Models.LocalCustomer))]
+        [ProducesResponseType(400)]
         public IActionResult Post([FromBody] Models.LocalCustomer newCustomer)
         {
             Models.LocalCustomer? createdCustomer = CRUD.Customers.create(newCustomer);

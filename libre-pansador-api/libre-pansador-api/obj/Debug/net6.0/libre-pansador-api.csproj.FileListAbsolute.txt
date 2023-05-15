@@ -331,4 +331,5 @@ C:\Repositories\libre-pensador-api\libre-pansador-api\libre-pansador-api\bin\Deb
 C:\Repositories\libre-pensador-api\libre-pansador-api\libre-pansador-api\bin\Debug\net6.0\MimeKit.dll
 C:\Repositories\libre-pensador-api\libre-pansador-api\libre-pansador-api\bin\Debug\net6.0\System.Security.Cryptography.Pkcs.dll
 C:\Repositories\libre-pensador-api\libre-pansador-api\libre-pansador-api\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.Pkcs.dll
-C:\Repositories\libre-pensador-api\libre-pansador-api\libre-pansador-api\bin\Debug\net6.0\appsetting.template.json
+C:\Repositories\libre-pensador-api\libre-pansador-api\libre-pansador-api\bin\Debug\net6.0\appsettings.template.json
+C:\Repositories\libre-pensador-api\libre-pansador-api\libre-pansador-api\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
