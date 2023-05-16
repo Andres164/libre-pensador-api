@@ -31,7 +31,6 @@ namespace libre_pansador_api.Services
             email.Headers.Add("X-Priority", "1");
             using (var client = new SmtpClient())
             {
-                Console.WriteLine($"sender address: {this._senderMailBoxAddress} \nSender Password: {this._senderEmailPassword}");
                 await client.ConnectAsync("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
                 await client.AuthenticateAsync(this._senderMailBoxAddress.Address, this._senderEmailPassword);
                 await client.SendAsync(email);

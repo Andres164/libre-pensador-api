@@ -40,14 +40,35 @@ namespace libre_pansador_api.Controllers
                 Subject = new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, credentials.Username) }),
                 NotBefore = DateTime.Today,
                 Expires = DateTime.Today.AddDays(1),
+                Audience = this._configuration["Jwt:Audience"],
+                Issuer = this._configuration["Jwt:Issuer"],
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKey), SecurityAlgorithms.HmacSha256Signature)
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
 
-            return Ok(new { Token = tokenString });
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTime.Today.AddDays(1)
+            };
+            Response.Cookies.Append("access_token", tokenString, cookieOptions);
+
+            return Ok(new { token = tokenString });
         }
+
+        
+        [HttpGet("checkIfAuthenticated")]
+        [ProducesResponseType(typeof(string), 200)]
+        [ProducesResponseType(401)]
+        public IActionResult CheckIfAuthenticated()
+        {
+            return Ok(new { status = "Authenticated" });
+        }
+
 
         private bool IsValidUser(UserCredentials credentials)
         { 
