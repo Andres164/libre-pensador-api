@@ -10,12 +10,21 @@ using System.Security.Cryptography;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using libre_pansador_api.Models;
+using Microsoft.EntityFrameworkCore;
 
 const string AllowSpecificOrigins = "AllowSpecificOrigins";
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddJsonFile("appsettings.json");
+
+var encryptionSettings = builder.Configuration.GetSection("Encryption");
+var encryptionKey = encryptionSettings["SecretKey"];
+
+if (string.IsNullOrEmpty(encryptionKey))
+    throw new Exception("Encryption key is missing in the configuration.");
+EncryptionUtility.Initialize(encryptionKey);
 
 var emailSection = builder.Configuration.GetSection("Email");
 var senderMailboxAddress = new MailboxAddress(emailSection["LogSenderName"], emailSection["LogSenderEmail"]);
@@ -26,9 +35,9 @@ builder.Services.AddSingleton(recipientMailboxAddress);
 builder.Services.AddScoped<libre_pansador_api.CRUD.Customers>();
 
 var jwtSettings = builder.Configuration.GetSection("Jwt");
-
 string? secretKey = jwtSettings["SecretKey"];
-if (string.IsNullOrEmpty(jwtSettings["SecretKey"]))
+
+if (string.IsNullOrEmpty(secretKey))
     throw new Exception("JWT SecretKey is missing in the configuration.");
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -41,7 +50,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = true,
             ValidAudience = jwtSettings["Audience"],
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["SecretKey"])),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
             ValidateLifetime = true,
             ClockSkew = TimeSpan.Zero
         };
@@ -80,6 +89,13 @@ builder.Services.AddHttpClient<LoyverseApiClient>(client =>
     client.BaseAddress = new Uri("https://api.loyverse.com/");
     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 });
+
+var connectionString = builder.Configuration.GetConnectionString("CafeLibrePensadorDb");
+Console.WriteLine($"Connection string: {connectionString}");
+
+builder.Services.AddDbContext<CafeLibrePensadorDbContext>(options =>
+    options.UseNpgsql(connectionString), ServiceLifetime.Transient);
+
 
 builder.Services.AddControllers()
     .AddApplicationPart(typeof(LoyverseController).Assembly)

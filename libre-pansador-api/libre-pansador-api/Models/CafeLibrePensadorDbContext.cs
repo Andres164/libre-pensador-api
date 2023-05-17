@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using Microsoft.EntityFrameworkCore;
 
 namespace libre_pansador_api.Models;
@@ -21,10 +22,6 @@ public partial class CafeLibrePensadorDbContext : DbContext
 
     public virtual DbSet<Employee> Employees { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseNpgsql("Server=localhost; Port=5432; Database=CafeLibrePensador; User Id=postgres; Password=admin");
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Card>(entity =>
@@ -34,9 +31,10 @@ public partial class CafeLibrePensadorDbContext : DbContext
             entity.Property(e => e.CardId)
                 .HasMaxLength(7)
                 .IsFixedLength()
+                .IsRequired()
                 .HasColumnName("card_id");
             entity.Property(e => e.CustomerEmail)
-                .HasMaxLength(100)
+                .HasColumnType("bytea")
                 .HasColumnName("customer_email");
         });
 
@@ -47,11 +45,16 @@ public partial class CafeLibrePensadorDbContext : DbContext
             entity.ToTable("customers");
 
             entity.Property(e => e.Email)
-                .HasMaxLength(100)
+                .IsRequired()
+                .HasColumnType("bytea")
                 .HasColumnName("email");
-            entity.Property(e => e.DateOfBirth).HasColumnName("date_of_birth");
+            entity.Property(e => e.EncryptedDateOfBirth)
+                .IsRequired()
+                .HasColumnType("bytea")
+                .HasColumnName("date_of_birth");
             entity.Property(e => e.LoyverseCustomerId)
                 .HasMaxLength(150)
+                .IsRequired()
                 .HasColumnName("loyverse_customer_id");
         });
 
@@ -80,4 +83,60 @@ public partial class CafeLibrePensadorDbContext : DbContext
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+    public override int SaveChanges()
+    {
+        EncryptSensitiveData();
+        var result = base.SaveChanges();
+        DecryptSensitiveData();
+        return result;
+    }
+
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        EncryptSensitiveData();
+        var result = await base.SaveChangesAsync(cancellationToken);
+        DecryptSensitiveData();
+        return result;
+    }
+
+    private void EncryptSensitiveData()
+    {
+        foreach (var entry in ChangeTracker.Entries<LocalCustomer>())
+        {
+            if (entry.State == EntityState.Added || entry.State == EntityState.Modified)
+            {
+                entry.Entity.Email = EncryptionUtility.Encrypt(entry.Entity.Email);
+                string dateOfBirth = entry.Entity.EncryptedDateOfBirth ?? "";
+                entry.Entity.EncryptedDateOfBirth = EncryptionUtility.Encrypt(dateOfBirth);
+            }
+        }
+
+        foreach (var entry in ChangeTracker.Entries<Card>())
+        {
+            var customerEmail = entry.Entity.CustomerEmail;
+            if ((entry.State == EntityState.Added || entry.State == EntityState.Modified) && customerEmail != null)
+                entry.Entity.CustomerEmail = EncryptionUtility.Encrypt(customerEmail);
+        }
+    }
+
+    private void DecryptSensitiveData()
+    {
+        foreach (var entry in ChangeTracker.Entries<LocalCustomer>())
+        {
+            if (entry.State == EntityState.Detached || entry.State == EntityState.Unchanged)
+            {
+                entry.Entity.Email = EncryptionUtility.Decrypt(entry.Entity.Email);
+                string dateOfBirth = entry.Entity.EncryptedDateOfBirth ?? "";
+                entry.Entity.DateOfBirth = DateOnly.Parse(EncryptionUtility.Decrypt(dateOfBirth));
+            }
+        }
+
+        foreach (var entry in ChangeTracker.Entries<Card>())
+        {
+            var customerEmail = entry.Entity.CustomerEmail;
+            if ((entry.State == EntityState.Added || entry.State == EntityState.Modified) && customerEmail != null)
+                entry.Entity.CustomerEmail = EncryptionUtility.Decrypt(customerEmail);
+        }
+    }
 }
