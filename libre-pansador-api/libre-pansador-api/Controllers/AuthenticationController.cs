@@ -52,12 +52,12 @@ namespace libre_pansador_api.Controllers
             {
                 HttpOnly = true,
                 Secure = true,
-                SameSite = SameSiteMode.Strict,
+                SameSite = SameSiteMode.None,
                 Expires = DateTime.Today.AddDays(1)
             };
             Response.Cookies.Append("access_token", tokenString, cookieOptions);
 
-            return Ok(new { token = tokenString });
+            return Ok(new { status = "Authenticated" });
         }
 
         
@@ -71,8 +71,11 @@ namespace libre_pansador_api.Controllers
 
 
         private bool IsValidUser(UserCredentials credentials)
-        { 
-            return credentials.Username == "LibrePensadorRaiz" && credentials.Password == "Adminlibrepensador";
+        {
+            var employee = CRUD.Employees.Read(credentials.Username);
+            if(employee == null)
+                return false;
+            return employee.UserName == credentials.Username && employee.Password == credentials.Password;
         }
     }
 }

@@ -19,6 +19,8 @@ public partial class CafeLibrePensadorDbContext : DbContext
 
     public virtual DbSet<LocalCustomer> Customers { get; set; }
 
+    public virtual DbSet<Employee> Employees { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseNpgsql("Server=localhost; Port=5432; Database=CafeLibrePensador; User Id=postgres; Password=admin");
@@ -51,6 +53,27 @@ public partial class CafeLibrePensadorDbContext : DbContext
             entity.Property(e => e.LoyverseCustomerId)
                 .HasMaxLength(150)
                 .HasColumnName("loyverse_customer_id");
+        });
+
+        modelBuilder.Entity<Employee>(entity =>
+        {
+            entity.HasKey(e => e.UserName).HasName("employees_pkey");
+
+            entity.ToTable("employees");
+
+            entity.Property(e => e.UserName)
+                .HasMaxLength(30)
+                .IsRequired()
+                .HasColumnName("user_name");
+
+            entity.Property(e => e.Password)
+                .HasMaxLength(20)
+                .IsRequired()
+                .HasColumnName("password");
+
+            entity.Property(e => e.IsAdmin)
+                .IsRequired()
+                .HasColumnName("is_admin");
         });
 
         OnModelCreatingPartial(modelBuilder);
