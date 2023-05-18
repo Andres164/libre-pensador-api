@@ -1,27 +1,29 @@
-﻿namespace libre_pansador_api.CRUD
+﻿using libre_pansador_api.Interfaces;
+using libre_pansador_api.Models;
+
+namespace libre_pansador_api.CRUD
 {
-    public static class Cards
+    public class Cards : ICardsService
     {
-        public static Models.Card? read(string card_id)
+        private readonly CafeLibrePensadorDbContext _dbContext;
+
+        public Cards(CafeLibrePensadorDbContext dbContext)
         { 
-            using (var dbContext = new Models.CafeLibrePensadorDbContext())
-            {
-                return dbContext.Cards.Find(card_id);
-            }
+            this._dbContext = dbContext;
         }
-
-        public static Models.Card? update(string card_id, string? updatedEmail)
+        public Models.Card? Read(string card_id)
         {
-            using (var dbContext = new Models.CafeLibrePensadorDbContext())
-            {
-                Models.Card? cardToUpdate = dbContext.Cards.Find(card_id);
-                if (cardToUpdate == null)
-                    return null;
-                cardToUpdate.CustomerEmail = updatedEmail;
-                dbContext.SaveChanges();
-                return cardToUpdate;
-            }
+            return this._dbContext.Cards.Find(card_id);
         }
 
+        public Models.Card? Update(string card_id, string? updatedEmail)
+        {
+            Models.Card? cardToUpdate = this._dbContext.Cards.Find(card_id);
+            if (cardToUpdate == null)
+                return null;
+            cardToUpdate.CustomerEmail = updatedEmail;
+            this._dbContext.SaveChanges();
+            return cardToUpdate;
+        }
     }
 }

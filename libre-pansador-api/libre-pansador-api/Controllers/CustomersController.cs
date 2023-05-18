@@ -1,4 +1,5 @@
 ﻿using libre_pansador_api.CRUD;
+using libre_pansador_api.Interfaces;
 using libre_pansador_api.Loyverse;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,9 +11,9 @@ namespace libre_pansador_api.Controllers
     [ApiController]
     public class CustomersController : ControllerBase
     {
-        private readonly Customers _customers;
+        private readonly ICustomersService _customers;
 
-        public CustomersController(Customers customers)
+        public CustomersController(ICustomersService customers)
         {
             _customers = customers;
         }
@@ -35,7 +36,7 @@ namespace libre_pansador_api.Controllers
         [ProducesResponseType(400)]
         public IActionResult Post([FromBody] Models.LocalCustomer newCustomer)
         {
-            Models.LocalCustomer? createdCustomer = CRUD.Customers.create(newCustomer);
+            Models.LocalCustomer? createdCustomer = this._customers.Create(newCustomer);
             return Ok(createdCustomer);
         }
 
@@ -45,7 +46,7 @@ namespace libre_pansador_api.Controllers
         [ProducesResponseType(400)]
         public IActionResult Delete(string email)
         {
-            Models.LocalCustomer? deletedCustomer = CRUD.Customers.delete(email);
+            Models.LocalCustomer? deletedCustomer = this._customers.Delete(email);
             if (deletedCustomer == null)
                 return NotFound();
             return Ok(deletedCustomer);

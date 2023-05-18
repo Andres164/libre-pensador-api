@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using libre_pansador_api.Models.RequestModels;
 using Microsoft.AspNetCore.Authorization;
+using libre_pansador_api.Interfaces;
 
 namespace libre_pansador_api.Controllers
 {
@@ -14,10 +15,12 @@ namespace libre_pansador_api.Controllers
     public class AuthenticationController : ControllerBase
     {
         private readonly IConfiguration _configuration;
+        private readonly IEmployeesService _employees;
 
-        public AuthenticationController(IConfiguration configuration)
+        public AuthenticationController(IConfiguration configuration, IEmployeesService employees)
         {
             this._configuration = configuration;
+            this._employees = employees;
         }
 
         [AllowAnonymous]
@@ -53,8 +56,13 @@ namespace libre_pansador_api.Controllers
                 HttpOnly = true,
                 Secure = true,
                 SameSite = SameSiteMode.None,
+                Domain = "localhost",
                 Expires = DateTime.Today.AddDays(1)
             };
+            // DEBUGGING
+            Console.WriteLine($"Token expiration date: {token.ValidTo}");
+            Console.WriteLine($"Cookie expiration date: {cookieOptions.Expires}");
+            ////////////
             Response.Cookies.Append("access_token", tokenString, cookieOptions);
 
             return Ok(new { status = "Authenticated" });
@@ -72,7 +80,7 @@ namespace libre_pansador_api.Controllers
 
         private bool IsValidUser(UserCredentials credentials)
         {
-            var employee = CRUD.Employees.Read(credentials.Username);
+            var employee = this._employees.Read(credentials.Username);
             if(employee == null)
                 return false;
             return employee.UserName == credentials.Username && employee.Password == credentials.Password;

@@ -3,19 +3,23 @@ using System.Text;
 
 public static class EncryptionUtility
 {
-    private static string? Key { get; set; } // Replace this with your secret key (32 characters)
+    private static string? Key { get; set; }
 
     public static void Initialize(string key)
     {
         if (EncryptionUtility.Key != null)
             throw new InvalidOperationException("The encryption key has already been initialized");
+        if (key.Length * 8 != 256)
+            throw new ArgumentException("Invalid key length. Key must be 32 characters long.", nameof(key));
         EncryptionUtility.Key = key;
     }
 
-    public static string Encrypt(string plainText)
+    public static string? Encrypt(string? plainText)
     {
         if (EncryptionUtility.Key == null)
             throw new InvalidOperationException("The encryption key hasn't been initialized");
+        if (plainText == null)
+            return null;
 
         using (var aes = Aes.Create())
         {
@@ -33,18 +37,26 @@ public static class EncryptionUtility
 
                 var iv = aes.IV;
                 var encrypted = msEncrypt.ToArray();
-
-                return Convert.ToBase64String(iv) + ':' + Convert.ToBase64String(encrypted);
+                //DEBUGGING
+                Console.WriteLine($"(Encryption)Encrypted text: {Convert.ToBase64String(iv) + '-' + Convert.ToBase64String(encrypted)}");
+                ////////////
+                return Convert.ToBase64String(iv) + '-' + Convert.ToBase64String(encrypted);
             }
         }
     }
 
-    public static string Decrypt(string encryptedText)
+    public static string? Decrypt(string? encryptedText)
     {
         if (EncryptionUtility.Key == null)
             throw new InvalidOperationException("The encryption key hasn't been initialized");
+        if (encryptedText == null)
+            return null;
 
-        var parts = encryptedText.Split(':');
+        var parts = encryptedText.Split('-');
+        // DEBUGGING
+        Console.WriteLine($"(Decryption)Encrypted text: {encryptedText}");
+        Console.WriteLine($"parts length: {parts.Length}");
+        ////////////
         if (parts.Length != 2) throw new ArgumentException("Invalid encrypted text format");
 
         var iv = Convert.FromBase64String(parts[0]);

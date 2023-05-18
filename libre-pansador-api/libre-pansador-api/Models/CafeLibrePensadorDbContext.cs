@@ -34,6 +34,7 @@ public partial class CafeLibrePensadorDbContext : DbContext
                 .IsRequired()
                 .HasColumnName("card_id");
             entity.Property(e => e.CustomerEmail)
+                .HasConversion(new Converters.EncryptionConverter())
                 .HasColumnType("bytea")
                 .HasColumnName("customer_email");
         });
@@ -46,10 +47,12 @@ public partial class CafeLibrePensadorDbContext : DbContext
 
             entity.Property(e => e.Email)
                 .IsRequired()
+                .HasConversion(new Converters.EncryptionConverter()!)
                 .HasColumnType("bytea")
                 .HasColumnName("email");
             entity.Property(e => e.EncryptedDateOfBirth)
                 .IsRequired()
+                .HasConversion(new Converters.EncryptionConverter()!)
                 .HasColumnType("bytea")
                 .HasColumnName("date_of_birth");
             entity.Property(e => e.LoyverseCustomerId)
@@ -84,59 +87,5 @@ public partial class CafeLibrePensadorDbContext : DbContext
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 
-    public override int SaveChanges()
-    {
-        EncryptSensitiveData();
-        var result = base.SaveChanges();
-        DecryptSensitiveData();
-        return result;
-    }
-
-    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-    {
-        EncryptSensitiveData();
-        var result = await base.SaveChangesAsync(cancellationToken);
-        DecryptSensitiveData();
-        return result;
-    }
-
-    private void EncryptSensitiveData()
-    {
-        foreach (var entry in ChangeTracker.Entries<LocalCustomer>())
-        {
-            if (entry.State == EntityState.Added || entry.State == EntityState.Modified)
-            {
-                entry.Entity.Email = EncryptionUtility.Encrypt(entry.Entity.Email);
-                string dateOfBirth = entry.Entity.EncryptedDateOfBirth ?? "";
-                entry.Entity.EncryptedDateOfBirth = EncryptionUtility.Encrypt(dateOfBirth);
-            }
-        }
-
-        foreach (var entry in ChangeTracker.Entries<Card>())
-        {
-            var customerEmail = entry.Entity.CustomerEmail;
-            if ((entry.State == EntityState.Added || entry.State == EntityState.Modified) && customerEmail != null)
-                entry.Entity.CustomerEmail = EncryptionUtility.Encrypt(customerEmail);
-        }
-    }
-
-    private void DecryptSensitiveData()
-    {
-        foreach (var entry in ChangeTracker.Entries<LocalCustomer>())
-        {
-            if (entry.State == EntityState.Detached || entry.State == EntityState.Unchanged)
-            {
-                entry.Entity.Email = EncryptionUtility.Decrypt(entry.Entity.Email);
-                string dateOfBirth = entry.Entity.EncryptedDateOfBirth ?? "";
-                entry.Entity.DateOfBirth = DateOnly.Parse(EncryptionUtility.Decrypt(dateOfBirth));
-            }
-        }
-
-        foreach (var entry in ChangeTracker.Entries<Card>())
-        {
-            var customerEmail = entry.Entity.CustomerEmail;
-            if ((entry.State == EntityState.Added || entry.State == EntityState.Modified) && customerEmail != null)
-                entry.Entity.CustomerEmail = EncryptionUtility.Decrypt(customerEmail);
-        }
-    }
+    
 }

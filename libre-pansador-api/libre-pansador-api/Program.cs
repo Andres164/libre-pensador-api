@@ -12,6 +12,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using libre_pansador_api.Models;
 using Microsoft.EntityFrameworkCore;
+using libre_pansador_api.CRUD;
+using libre_pansador_api.Interfaces;
 
 const string AllowSpecificOrigins = "AllowSpecificOrigins";
 
@@ -21,22 +23,12 @@ builder.Configuration.AddJsonFile("appsettings.json");
 
 var encryptionSettings = builder.Configuration.GetSection("Encryption");
 var encryptionKey = encryptionSettings["SecretKey"];
-
 if (string.IsNullOrEmpty(encryptionKey))
     throw new Exception("Encryption key is missing in the configuration.");
 EncryptionUtility.Initialize(encryptionKey);
 
-var emailSection = builder.Configuration.GetSection("Email");
-var senderMailboxAddress = new MailboxAddress(emailSection["LogSenderName"], emailSection["LogSenderEmail"]);
-var recipientMailboxAddress = new MailboxAddress(emailSection["LogRecipientName"], emailSection["LogRecipientEmail"]);
-
-builder.Services.AddSingleton(new EmailService(senderMailboxAddress, emailSection["LogSenderEmailPassword"] ?? string.Empty));
-builder.Services.AddSingleton(recipientMailboxAddress);
-builder.Services.AddScoped<libre_pansador_api.CRUD.Customers>();
-
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 string? secretKey = jwtSettings["SecretKey"];
-
 if (string.IsNullOrEmpty(secretKey))
     throw new Exception("JWT SecretKey is missing in the configuration.");
 
@@ -90,12 +82,30 @@ builder.Services.AddHttpClient<LoyverseApiClient>(client =>
     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 });
 
-var connectionString = builder.Configuration.GetConnectionString("CafeLibrePensadorDb");
-Console.WriteLine($"Connection string: {connectionString}");
-
 builder.Services.AddDbContext<CafeLibrePensadorDbContext>(options =>
-    options.UseNpgsql(connectionString), ServiceLifetime.Transient);
+    options.UseNpgsql(builder.Configuration.GetConnectionString("CafeLibrePensadorDb")));
 
+builder.Services.AddScoped<ICardsService, Cards>();
+builder.Services.AddScoped<ICustomersService, Customers>();
+builder.Services.AddScoped<IEmployeesService, Employees>();
+
+builder.Services.AddControllers()
+    .AddApplicationPart(typeof(AuthenticationController).Assembly);
+
+builder.Services.AddControllers()
+    .AddApplicationPart(typeof(CardsController).Assembly);
+
+builder.Services.AddControllers()
+    .AddApplicationPart(typeof(CustomersController).Assembly);
+
+var emailSection = builder.Configuration.GetSection("Email");
+var senderMailboxAddress = new MailboxAddress(emailSection["LogSenderName"], emailSection["LogSenderEmail"]);
+var recipientMailboxAddress = new MailboxAddress(emailSection["LogRecipientName"], emailSection["LogRecipientEmail"]);
+builder.Services.AddSingleton(new EmailService(senderMailboxAddress, emailSection["LogSenderEmailPassword"] ?? string.Empty));
+builder.Services.AddSingleton(recipientMailboxAddress);
+
+builder.Services.AddControllers()
+    .AddApplicationPart(typeof(ErrorLogsController).Assembly);
 
 builder.Services.AddControllers()
     .AddApplicationPart(typeof(LoyverseController).Assembly)
@@ -103,8 +113,6 @@ builder.Services.AddControllers()
     {
         options.JsonSerializerOptions.Converters.Add(new DateOnlyConverter());
     });
-builder.Services.AddControllers()
-    .AddApplicationPart(typeof(ErrorLogsController).Assembly);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
