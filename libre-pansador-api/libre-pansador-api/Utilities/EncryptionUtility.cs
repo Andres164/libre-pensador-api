@@ -37,9 +37,6 @@ public static class EncryptionUtility
 
                 var iv = aes.IV;
                 var encrypted = msEncrypt.ToArray();
-                //DEBUGGING
-                Console.WriteLine($"(Encryption)Encrypted text: {Convert.ToBase64String(iv) + '-' + Convert.ToBase64String(encrypted)}");
-                ////////////
                 return Convert.ToBase64String(iv) + '-' + Convert.ToBase64String(encrypted);
             }
         }
@@ -53,10 +50,6 @@ public static class EncryptionUtility
             return null;
 
         var parts = encryptedText.Split('-');
-        // DEBUGGING
-        Console.WriteLine($"(Decryption)Encrypted text: {encryptedText}");
-        Console.WriteLine($"parts length: {parts.Length}");
-        ////////////
         if (parts.Length != 2) throw new ArgumentException("Invalid encrypted text format");
 
         var iv = Convert.FromBase64String(parts[0]);

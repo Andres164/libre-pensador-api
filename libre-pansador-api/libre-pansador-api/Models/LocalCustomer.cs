@@ -8,17 +8,5 @@ public partial class LocalCustomer
 {
     public string LoyverseCustomerId { get; set; } = null!;
     public string Email { get; set; } = null!;
-    /*
-    public DateOnly DateOfBirth 
-    {
-        get
-        {
-            return DateOnly.Parse(this.EncryptedDateOfBirth);
-        }
-        set
-        {
-            this.EncryptedDateOfBirth = value.ToString();
-        }
-    }*/
-    public string EncryptedDateOfBirth { get; set; } = default!;
+    public string DateOfBirth { get; set; } = default!;
 }

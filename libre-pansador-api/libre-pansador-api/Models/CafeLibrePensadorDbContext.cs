@@ -50,7 +50,7 @@ public partial class CafeLibrePensadorDbContext : DbContext
                 .HasConversion(new Converters.EncryptionConverter()!)
                 .HasColumnType("bytea")
                 .HasColumnName("email");
-            entity.Property(e => e.EncryptedDateOfBirth)
+            entity.Property(e => e.DateOfBirth)
                 .IsRequired()
                 .HasConversion(new Converters.EncryptionConverter()!)
                 .HasColumnType("bytea")

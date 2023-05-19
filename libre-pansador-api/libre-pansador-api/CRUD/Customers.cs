@@ -1,5 +1,6 @@
 ﻿using libre_pansador_api.Interfaces;
 using libre_pansador_api.Loyverse;
+using libre_pansador_api.Loyverse.Models;
 using libre_pansador_api.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,18 +16,17 @@ namespace libre_pansador_api.CRUD
             this._loyverseApiClient = loyverseApiClient;
             this._dbContext = dbContext;
         }
-
+        
         public async Task<Models.MergedCustomer?> ReadAsync(string customerEmail)
         {
 
-            Models.LocalCustomer? customer = this._dbContext.Customers.Find(customerEmail);
+            Models.LocalCustomer? customer = this._dbContext.Customers
+                .AsEnumerable()
+                .FirstOrDefault( c => c.Email == customerEmail );
             if (customer == null)
                 return null;
             try
             {
-                // DEBUGGING
-                Console.WriteLine($"(ReadAsync)Customer Email: {customer.Email}");
-                /////
                 var loyverseCustomerInfo = await _loyverseApiClient.GetCustomerInfoAsync(customer.LoyverseCustomerId);
                 if(loyverseCustomerInfo == null)
                 {
@@ -46,17 +46,22 @@ namespace libre_pansador_api.CRUD
         {
             this._dbContext.Customers.Add(newCustomer);
             this._dbContext.SaveChanges();
-            return this._dbContext.Customers.Find(newCustomer.LoyverseCustomerId);
+            return this._dbContext.Customers
+                .AsEnumerable()
+                .FirstOrDefault(c => c.Email == newCustomer.Email);
         }
 
         public Models.LocalCustomer? Delete(string customerEmail)
         {
-            Models.LocalCustomer? customerToDelete = this._dbContext.Customers.Find(customerEmail);
+            Models.LocalCustomer? customerToDelete = this._dbContext.Customers
+                .AsEnumerable()
+                .FirstOrDefault(c => c.Email == customerEmail);
             if (customerToDelete == null)
                 return null;
-            this._dbContext.Customers.Remove(customerToDelete);
-            this._dbContext.SaveChanges();
-            return customerToDelete;
+            string sql = "DELETE FROM customers WHERE loyverse_customer_id = @p0";
+            int rowsAffected = _dbContext.Database.ExecuteSqlRaw(sql, customerToDelete.LoyverseCustomerId);
+
+            return rowsAffected > 0 ? customerToDelete : null;
         }
     }
 }

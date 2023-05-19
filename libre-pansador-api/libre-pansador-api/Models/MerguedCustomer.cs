@@ -16,7 +16,7 @@ namespace libre_pansador_api.Models
             this.TotalPoints = loyverseCustomer.TotalPoints;
             this.Email = loyverseCustomer.Email;
 
-            this.DateOfBirth = localCustomer.EncryptedDateOfBirth;
+            this.DateOfBirth = localCustomer.DateOfBirth;
         }
     }
 
