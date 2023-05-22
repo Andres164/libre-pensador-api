@@ -68,13 +68,15 @@ public partial class CafeLibrePensadorDbContext : DbContext
             entity.ToTable("employees");
 
             entity.Property(e => e.UserName)
-                .HasMaxLength(30)
                 .IsRequired()
+                .HasConversion(new Converters.EncryptionConverter()!)
+                .HasColumnType("bytea")
                 .HasColumnName("user_name");
 
             entity.Property(e => e.Password)
-                .HasMaxLength(20)
                 .IsRequired()
+                .HasConversion(new Converters.EncryptionConverter()!)
+                .HasColumnType("bytea")
                 .HasColumnName("password");
 
             entity.Property(e => e.IsAdmin)

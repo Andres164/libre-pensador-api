@@ -26,7 +26,7 @@ namespace libre_pansador_api.CRUD
             //newEmployee.IsAdmin = false;
             this._dbContext.Employees.Add(newEmployee);
             this._dbContext.SaveChanges();
-            return Read(newEmployee.UserName);
+            return this.Read(newEmployee.UserName);
         }
 
         public Models.Employee? Delete(string userName)
@@ -40,6 +40,18 @@ namespace libre_pansador_api.CRUD
             int rowsAffected = _dbContext.Database.ExecuteSqlRaw(sql, employeeToDelete.UserName);
 
             return rowsAffected > 0 ? employeeToDelete : null;
+        }
+
+        public Models.Employee? Update(string userName, Models.RequestModels.UpdateEmployeeRequest updatedEmployee)
+        {
+            Models.Employee? employeeToUpdate = this.Read(userName);
+            if (employeeToUpdate == null)
+                return null;
+            string sql = "UPDATE employees SET password = @p0 WHERE user_name = @p1";
+            int rowsAffected = _dbContext.Database.ExecuteSqlRaw(sql, updatedEmployee.Password, userName) ;
+            employeeToUpdate = this.Read(userName);
+
+            return rowsAffected > 0 ? employeeToUpdate : null;
         }
     }
 }
