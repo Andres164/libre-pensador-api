@@ -61,6 +61,8 @@ builder.Services.AddAuthorization(options =>
     options.FallbackPolicy = new AuthorizationPolicyBuilder()
         .RequireAuthenticatedUser()
         .Build();
+    options.AddPolicy("AdminOnly", policy =>
+        policy.RequireClaim("IsAdmin", "True"));
 });
 
 builder.Services.AddCors(options =>

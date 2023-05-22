@@ -1,5 +1,6 @@
 ﻿using libre_pansador_api.Interfaces;
 using libre_pansador_api.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Server.HttpSys;
 using Org.BouncyCastle.Asn1.Ocsp;
@@ -8,6 +9,7 @@ namespace libre_pansador_api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Policy = "AdminOnly")]
     public class EmployeesController : ControllerBase
     {
         private readonly IEmployeesService _employeess;
@@ -34,6 +36,7 @@ namespace libre_pansador_api.Controllers
         [ProducesResponseType(200, Type = typeof(Employee))]
         public IActionResult Post([FromBody] Employee employee)
         {
+            employee.IsAdmin = false;
             Employee? createdEmployee = this._employeess.Create(employee);
             if (createdEmployee == null)
                 return StatusCode(500, "Unexpected error while creating the employee, the employee wasn't created");

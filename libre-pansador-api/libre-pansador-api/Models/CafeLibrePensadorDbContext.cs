@@ -81,6 +81,7 @@ public partial class CafeLibrePensadorDbContext : DbContext
 
             entity.Property(e => e.IsAdmin)
                 .IsRequired()
+                .HasColumnType("boolean")
                 .HasColumnName("is_admin");
         });
 

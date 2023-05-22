@@ -18,12 +18,12 @@ namespace libre_pansador_api.CRUD
             var employee = this._dbContext.Employees
                 .AsEnumerable()
                 .FirstOrDefault(e => e.UserName == userName);
+
             return employee;
         }
 
         public Models.Employee? Create(Models.Employee newEmployee)
         {
-            //newEmployee.IsAdmin = false;
             this._dbContext.Employees.Add(newEmployee);
             this._dbContext.SaveChanges();
             return this.Read(newEmployee.UserName);
@@ -48,7 +48,7 @@ namespace libre_pansador_api.CRUD
             if (employeeToUpdate == null)
                 return null;
             string sql = "UPDATE employees SET password = @p0 WHERE user_name = @p1";
-            int rowsAffected = _dbContext.Database.ExecuteSqlRaw(sql, updatedEmployee.Password, userName) ;
+            int rowsAffected = _dbContext.Database.ExecuteSqlRaw(sql, updatedEmployee.Password, employeeToUpdate.UserName);
             employeeToUpdate = this.Read(userName);
 
             return rowsAffected > 0 ? employeeToUpdate : null;

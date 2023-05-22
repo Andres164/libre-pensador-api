@@ -29,7 +29,8 @@ namespace libre_pansador_api.Controllers
         [ProducesResponseType(401)]
         public IActionResult Authenticate([FromBody] UserCredentials credentials)
         {
-            if (!IsValidUser(credentials))
+            Models.Employee? employee = this.GetUserWhitCredentials(credentials);
+            if (employee == null)
                 return Unauthorized();
 
             string? secretKeyConfig = this._configuration["Jwt:SecretKey"];
@@ -40,7 +41,11 @@ namespace libre_pansador_api.Controllers
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, credentials.Username) }),
+                Subject = new ClaimsIdentity(new[]
+                {
+                    new Claim(ClaimTypes.Name, credentials.Username),
+                    new Claim("IsAdmin", employee.IsAdmin.ToString())
+                }),
                 NotBefore = DateTime.Today,
                 Expires = DateTime.Today.AddDays(1),
                 Audience = this._configuration["Jwt:Audience"],
@@ -59,10 +64,6 @@ namespace libre_pansador_api.Controllers
                 Domain = "localhost",
                 Expires = DateTime.Today.AddDays(1)
             };
-            // DEBUGGING
-            Console.WriteLine($"Token expiration date: {token.ValidTo}");
-            Console.WriteLine($"Cookie expiration date: {cookieOptions.Expires}");
-            ////////////
             Response.Cookies.Append("access_token", tokenString, cookieOptions);
 
             return Ok(new { status = "Authenticated" });
@@ -78,12 +79,14 @@ namespace libre_pansador_api.Controllers
         }
 
 
-        private bool IsValidUser(UserCredentials credentials)
+        private Models.Employee? GetUserWhitCredentials(UserCredentials credentials)
         {
             var employee = this._employees.Read(credentials.Username);
-            if(employee == null)
-                return false;
-            return employee.UserName == credentials.Username && employee.Password == credentials.Password;
+            if (employee == null)
+                return null;
+
+            bool areCredentialsValid = employee.UserName == credentials.Username && employee.Password == credentials.Password;
+            return areCredentialsValid ? employee : null;
         }
     }
 }
