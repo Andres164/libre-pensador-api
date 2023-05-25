@@ -15,9 +15,9 @@ namespace libre_pansador_api.Controllers
     public class AuthenticationController : ControllerBase
     {
         private readonly IConfiguration _configuration;
-        private readonly IEmployeesService _employees;
+        private readonly IUserService _employees;
 
-        public AuthenticationController(IConfiguration configuration, IEmployeesService employees)
+        public AuthenticationController(IConfiguration configuration, IUserService employees)
         {
             this._configuration = configuration;
             this._employees = employees;
@@ -29,7 +29,7 @@ namespace libre_pansador_api.Controllers
         [ProducesResponseType(401)]
         public IActionResult Authenticate([FromBody] UserCredentials credentials)
         {
-            Models.Employee? employee = this.GetUserWhitCredentials(credentials);
+            Models.User? employee = this.GetUserWhitCredentials(credentials);
             if (employee == null)
                 return Unauthorized();
 
@@ -79,7 +79,7 @@ namespace libre_pansador_api.Controllers
         }
 
 
-        private Models.Employee? GetUserWhitCredentials(UserCredentials credentials)
+        private Models.User? GetUserWhitCredentials(UserCredentials credentials)
         {
             var employee = this._employees.Read(credentials.Username);
             if (employee == null)

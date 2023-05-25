@@ -20,7 +20,7 @@ public partial class CafeLibrePensadorDbContext : DbContext
 
     public virtual DbSet<LocalCustomer> Customers { get; set; }
 
-    public virtual DbSet<Employee> Employees { get; set; }
+    public virtual DbSet<User> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -61,11 +61,11 @@ public partial class CafeLibrePensadorDbContext : DbContext
                 .HasColumnName("loyverse_customer_id");
         });
 
-        modelBuilder.Entity<Employee>(entity =>
+        modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UserName).HasName("employees_pkey");
+            entity.HasKey(e => e.UserName).HasName("users_pkey");
 
-            entity.ToTable("employees");
+            entity.ToTable("users");
 
             entity.Property(e => e.UserName)
                 .IsRequired()
@@ -83,6 +83,9 @@ public partial class CafeLibrePensadorDbContext : DbContext
                 .IsRequired()
                 .HasColumnType("boolean")
                 .HasColumnName("is_admin");
+            entity.Property(e => e.UserNumber)
+                .IsRequired()
+                .HasColumnName("user_number");
         });
 
         OnModelCreatingPartial(modelBuilder);
