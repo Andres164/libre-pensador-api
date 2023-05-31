@@ -43,16 +43,6 @@ namespace libre_pansador_api.Controllers
             return Ok(createdUser);
         }
 
-        // PUT api/<UsersController>/userName
-        [HttpPut("{userName}")]
-        public IActionResult Put(string userName, [FromBody] Models.RequestModels.UpdateUserRequest updateUser)
-        {
-            User? updatedUser = this._users.Update(userName, updateUser);
-            if (updatedUser == null)
-                return NotFound();
-            return Ok(updatedUser);
-        }
-
         // DELETE api/<UsersController>/userName
         [HttpDelete("{userName}")]
         public IActionResult Delete(string userName)

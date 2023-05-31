@@ -27,26 +27,6 @@ if (string.IsNullOrEmpty(encryptionKey))
     throw new Exception("Encryption key is missing in the configuration.");
 EncryptionUtility.Initialize(encryptionKey);
 
-/* FOR PRODUCTION
-var sslCertificateSettings = builder.Configuration.GetSection("SslCertificate");
-var pathToSslCertificate = sslCertificateSettings["PathToCertificate"];
-var sslCertificatePassword = sslCertificateSettings["Password"];
-if (string.IsNullOrEmpty(pathToSslCertificate) || string.IsNullOrEmpty(sslCertificatePassword))
-{
-    string missingConfigurations = string.IsNullOrEmpty(pathToSslCertificate) ? "PathToCertificate " : "";
-    missingConfigurations += string.IsNullOrEmpty(sslCertificatePassword) ? " Password" : "";
-    throw new Exception($"SslCertificate: {missingConfigurations} is/are missing in the configuration file");
-}
-
-builder.WebHost.ConfigureKestrel(serverOptions =>
-{
-    serverOptions.ListenLocalhost(7068, listenOptions =>
-    {
-        listenOptions.UseHttps(pathToSslCertificate, sslCertificatePassword);
-    });
-});
-*/
-
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 string? secretKey = jwtSettings["SecretKey"];
 if (string.IsNullOrEmpty(secretKey))
