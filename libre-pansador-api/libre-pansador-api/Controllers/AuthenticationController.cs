@@ -29,8 +29,8 @@ namespace libre_pansador_api.Controllers
         [ProducesResponseType(401)]
         public IActionResult Authenticate([FromBody] UserCredentials credentials)
         {
-            Models.User? employee = this.GetUserWhitCredentials(credentials);
-            if (employee == null)
+            Models.User? user = this.GetUserWhitCredentials(credentials);
+            if (user == null)
                 return Unauthorized();
 
             string? secretKeyConfig = this._configuration["Jwt:SecretKey"];
@@ -44,7 +44,7 @@ namespace libre_pansador_api.Controllers
                 Subject = new ClaimsIdentity(new[]
                 {
                     new Claim(ClaimTypes.Name, credentials.Username),
-                    new Claim("IsAdmin", employee.IsAdmin.ToString())
+                    new Claim("IsAdmin", user.IsAdmin.ToString())
                 }),
                 NotBefore = DateTime.Today,
                 Expires = DateTime.Today.AddDays(1),
@@ -66,7 +66,7 @@ namespace libre_pansador_api.Controllers
             };
             Response.Cookies.Append("access_token", tokenString, cookieOptions);
 
-            return Ok(new { status = "Authenticated" });
+            return Ok(new { IsAdmin = user.IsAdmin });
         }
 
         

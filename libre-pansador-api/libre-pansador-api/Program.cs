@@ -65,12 +65,15 @@ builder.Services.AddAuthorization(options =>
         policy.RequireClaim("IsAdmin", "True"));
 });
 
+string[] allowedIps = builder.Configuration.GetSection("AllowedIps").Get<List<String>>().ToArray();
+IpConverter.ConvertIpsToOrigin(allowedIps);
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(AllowSpecificOrigins, 
     policy =>
     {
-        policy.WithOrigins("https://localhost:443", "http://localhost:80", "https://localhost")
+        policy.WithOrigins(allowedIps)
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
