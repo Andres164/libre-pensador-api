@@ -41,5 +41,17 @@ namespace libre_pensador_api.CRUD
 
             return rowsAffected > 0 ? userToDelete : null;
         }
+
+        public Models.User? Update(string userName, Models.RequestModels.UpdateUserRequest updatedUser)
+        {
+            string sql = "UPDATE TABLE users SET password = @p0 WHERE user_name = @p1";
+            int rowsAffected = this._dbContext.Database.ExecuteSqlRaw(sql, updatedUser.Password, userName);
+
+            this._dbContext.Users
+                .AsEnumerable()
+                .FirstOrDefault(u => u.)
+            return rowsAffected > 0 ? updatedUser : null;
+
+        }
     }
 }
