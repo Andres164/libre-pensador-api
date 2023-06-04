@@ -69,8 +69,7 @@ public partial class CafeLibrePensadorDbContext : DbContext
 
             entity.Property(e => e.UserName)
                 .IsRequired()
-                .HasConversion(new Converters.HashConverter())
-                .HasColumnType("bytea")
+                .HasMaxLength(60)
                 .HasColumnName("user_name");
 
             entity.Property(e => e.Password)
@@ -83,9 +82,6 @@ public partial class CafeLibrePensadorDbContext : DbContext
                 .IsRequired()
                 .HasColumnType("boolean")
                 .HasColumnName("is_admin");
-            entity.Property(e => e.UserNumber)
-                .IsRequired()
-                .HasColumnName("user_number");
         });
 
         OnModelCreatingPartial(modelBuilder);

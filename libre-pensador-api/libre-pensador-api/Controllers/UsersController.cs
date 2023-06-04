@@ -52,5 +52,17 @@ namespace libre_pensador_api.Controllers
                 return NotFound();
             return Ok(deletedUser);
         }
+
+        // PUT api/<UsersController>/userName
+        [HttpPut("{userName}")]
+        [ProducesResponseType(200, Type = typeof(User))]
+        [ProducesResponseType(400)]
+        public IActionResult Put(string userName, [FromBody]Models.RequestModels.UpdateUserRequest updateUserBody)
+        {
+            User? updatedUser = this._users.Update(userName, updateUserBody);
+            if (updatedUser == null)
+                return NotFound();
+            return Ok(updatedUser);
+        }
     }
 }
