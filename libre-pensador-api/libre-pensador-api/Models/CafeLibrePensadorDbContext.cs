@@ -69,13 +69,13 @@ public partial class CafeLibrePensadorDbContext : DbContext
 
             entity.Property(e => e.UserName)
                 .IsRequired()
-                .HasConversion(new Converters.EncryptionConverter()!)
+                .HasConversion(new Converters.HashConverter())
                 .HasColumnType("bytea")
                 .HasColumnName("user_name");
 
             entity.Property(e => e.Password)
                 .IsRequired()
-                .HasConversion(new Converters.EncryptionConverter()!)
+                .HasConversion(new Converters.HashConverter())
                 .HasColumnType("bytea")
                 .HasColumnName("password");
 

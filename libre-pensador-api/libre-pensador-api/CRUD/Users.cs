@@ -1,5 +1,6 @@
 ﻿using libre_pensador_api.Interfaces;
 using libre_pensador_api.Models;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 
 namespace libre_pensador_api.CRUD
@@ -15,43 +16,70 @@ namespace libre_pensador_api.CRUD
 
         public Models.User? Read(string userName)
         {
-            var user = this._dbContext.Users
-                .AsEnumerable()
-                .FirstOrDefault(u => u.UserName == userName);
-
-            return user;
+            try
+            {
+                return this._dbContext.Users.Find(userName);
+            }
+            catch (Exception ex)
+            {
+                // Log exception correctly
+                Console.WriteLine($"Unexpected exception when trying to read user {userName}: {ex}");
+                throw;
+            }
         }
 
         public Models.User? Create(Models.User newUser)
         {
-            this._dbContext.Users.Add(newUser);
-            this._dbContext.SaveChanges();
-            return this.Read(newUser.UserName);
+            try
+            {
+                var createdUser = this._dbContext.Users.Add(newUser);
+                this._dbContext.SaveChanges();
+                return createdUser.Entity;
+            }
+            catch (Exception ex)
+            {
+                // Log exception correctly
+                Console.WriteLine($"Unexpected exception when trying to Create user {newUser.UserName}: {ex}");
+                throw;
+            }
         }
 
         public Models.User? Delete(string userName)
         {
-            Models.User? userToDelete = this._dbContext.Users
-                .AsEnumerable()
-                .FirstOrDefault(u => u.UserName == userName);
-            if (userToDelete == null)
-                return null;
-            string sql = "DELETE FROM users WHERE user_number = @p0";
-            int rowsAffected = _dbContext.Database.ExecuteSqlRaw(sql, userToDelete.UserNumber!);
-
-            return rowsAffected > 0 ? userToDelete : null;
+            try
+            {
+                var usertoDelete = this._dbContext.Users.Find(userName);
+                if (usertoDelete == null)
+                    return null;
+                var deletedUser = this._dbContext.Users.Remove(usertoDelete);
+                this._dbContext.SaveChanges();
+                return deletedUser.Entity;
+            }
+            catch (Exception ex)
+            {
+                // Log exception correctly
+                Console.WriteLine($"Unexpected exception when trying to Delete user {userName}: {ex}");
+                throw;
+            }
         }
 
         public Models.User? Update(string userName, Models.RequestModels.UpdateUserRequest updatedUser)
         {
-            string sql = "UPDATE TABLE users SET password = @p0 WHERE user_name = @p1";
-            int rowsAffected = this._dbContext.Database.ExecuteSqlRaw(sql, updatedUser.Password, userName);
-
-            this._dbContext.Users
-                .AsEnumerable()
-                .FirstOrDefault(u => u.)
-            return rowsAffected > 0 ? updatedUser : null;
-
+            try
+            {
+                Models.User? userToUpdate = this._dbContext.Users.Find(userName);
+                if (userToUpdate == null)
+                    return null;
+                userToUpdate.Password = updatedUser.Password;
+                this._dbContext.SaveChanges();
+                return userToUpdate;
+            }
+            catch(Exception ex) 
+            { 
+                // Log exception correctly
+                Console.WriteLine($"Unexpected exception when trying to Update user {userName}: {ex}");
+                throw;
+            }
         }
     }
 }

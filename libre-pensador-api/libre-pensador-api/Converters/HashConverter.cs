@@ -8,8 +8,7 @@ namespace libre_pensador_api.Converters
         public HashConverter() : base(
             v => HashConverter.Hash(v), // to data  
             v => v) // from data
-        {
-        }
+        { }
 
         static string Hash(string value) => HashingUtility.HashPassword(value);
     }
