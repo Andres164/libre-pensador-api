@@ -1,5 +1,6 @@
 ﻿using libre_pensador_api.Interfaces;
 using libre_pensador_api.Models;
+using Microsoft.CodeAnalysis;
 
 namespace libre_pensador_api.CRUD
 {
@@ -19,6 +20,15 @@ namespace libre_pensador_api.CRUD
 
         public Models.Card? Update(string card_id, string? updatedEmail)
         {
+            if(updatedEmail != null) 
+            {
+                ILocalCustomerService localCustomerService = new CRUD.LocalCustomers(this._dbContext);
+                Models.LocalCustomer? customer = localCustomerService.ReadWithDecryptedEmail(updatedEmail);
+                if (customer == null)
+                    throw new ArgumentException($"there is no customers with the email: {updatedEmail}");
+                updatedEmail = customer.EncryptedEmail;
+            }
+
             Models.Card? cardToUpdate = this._dbContext.Cards.Find(card_id);
             if (cardToUpdate == null)
                 return null;
