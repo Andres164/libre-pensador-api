@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using libre_pensador_api.Models.RequestModels;
 using libre_pensador_api.Interfaces;
+using libre_pensador_api.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -26,7 +27,8 @@ namespace libre_pensador_api.Controllers
             Models.Card? card = this._cards.Read(id);
             if(card == null)
                 return NotFound();
-            return Ok(card);
+            var cardView = Mappers.CardMapper.ToViewModel(card);
+            return Ok(cardView);
         }
 
         // PUT api/Cards/QR00005
@@ -46,7 +48,8 @@ namespace libre_pensador_api.Controllers
             }
             if(updatedCard == null) 
                 return NotFound();
-            return Ok(updatedCard);
+            var cardView = Mappers.CardMapper.ToViewModel(updatedCard);
+            return Ok(cardView);
         }
     }
 }

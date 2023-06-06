@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
 
 namespace libre_pensador_api.Models;
@@ -9,6 +10,8 @@ public partial class LocalCustomer
     public string LoyverseCustomerId { get; set; } = null!;
     public string EncryptedEmail { get; set; } = null!;
     public string DateOfBirth { get; set; } = default!;
+
+    [NotMapped]
     public string DecryptedEmail 
     {
         get => EncryptionUtility.Decrypt(this.EncryptedEmail)!;

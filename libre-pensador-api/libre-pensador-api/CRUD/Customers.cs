@@ -22,7 +22,7 @@ namespace libre_pensador_api.CRUD
 
             Models.LocalCustomer? customer = this._dbContext.Customers
                 .AsEnumerable()
-                .FirstOrDefault( c => c.EncryptedEmail == customerEmail );
+                .FirstOrDefault( c => c.DecryptedEmail == customerEmail );
             if (customer == null)
                 return null;
             try
@@ -44,24 +44,40 @@ namespace libre_pensador_api.CRUD
 
         public Models.LocalCustomer? Create(Models.LocalCustomer newCustomer)
         {
-            this._dbContext.Customers.Add(newCustomer);
-            this._dbContext.SaveChanges();
-            return this._dbContext.Customers
-                .AsEnumerable()
-                .FirstOrDefault(c => c.EncryptedEmail == newCustomer.EncryptedEmail);
+            try
+            {
+                var createdCustomer = this._dbContext.Customers.Add(newCustomer);
+                this._dbContext.SaveChanges();
+                return createdCustomer.Entity;
+
+            }
+            catch (Exception ex)
+            {
+                // Log exception correctly
+                Console.WriteLine($"Unexpected exception when trying to Create the customer with email {newCustomer}: {ex}");
+                throw;
+            }
         }
 
         public Models.LocalCustomer? Delete(string customerEmail)
         {
-            Models.LocalCustomer? customerToDelete = this._dbContext.Customers
-                .AsEnumerable()
-                .FirstOrDefault(c => c.EncryptedEmail == customerEmail);
-            if (customerToDelete == null)
-                return null;
-            string sql = "DELETE FROM customers WHERE loyverse_customer_id = @p0";
-            int rowsAffected = _dbContext.Database.ExecuteSqlRaw(sql, customerToDelete.LoyverseCustomerId);
-
-            return rowsAffected > 0 ? customerToDelete : null;
+            try
+            {
+                Models.LocalCustomer? customerToDelete = this._dbContext.Customers
+                    .AsEnumerable()
+                    .FirstOrDefault(c => c.DecryptedEmail == customerEmail);
+                if (customerToDelete == null)
+                    return null;
+                var deletedCustomer = this._dbContext.Customers.Remove(customerToDelete);
+                this._dbContext.SaveChanges();
+                return deletedCustomer.Entity;
+            }
+            catch (Exception ex)
+            {
+                // Log exception correctly
+                Console.WriteLine($"Unexpected exception when trying to Delete the customer with email {customerEmail}: {ex}");
+                throw;
+            }
         }
     }
 }
