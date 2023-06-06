@@ -11,6 +11,7 @@ namespace libre_pensador_api.CRUD
         { 
             this._dbContext = dbContext;
         }
+
         public Models.Card? Read(string card_id)
         {
             return this._dbContext.Cards.Find(card_id);
@@ -21,7 +22,7 @@ namespace libre_pensador_api.CRUD
             Models.Card? cardToUpdate = this._dbContext.Cards.Find(card_id);
             if (cardToUpdate == null)
                 return null;
-            cardToUpdate.CustomerEmail = updatedEmail;
+            cardToUpdate.EncryptedCustomerEmail = updatedEmail;
             this._dbContext.SaveChanges();
             return cardToUpdate;
         }

@@ -7,5 +7,5 @@ public partial class Card
 {
     public string CardId { get; set; } = null!;
 
-    public string? CustomerEmail { get; set; }
+    public string? EncryptedCustomerEmail { get; set; }
 }

@@ -33,21 +33,19 @@ public partial class CafeLibrePensadorDbContext : DbContext
                 .IsFixedLength()
                 .IsRequired()
                 .HasColumnName("card_id");
-            entity.Property(e => e.CustomerEmail)
-                .HasConversion(new Converters.EncryptionConverter())
+            entity.Property(e => e.EncryptedCustomerEmail)
                 .HasColumnType("bytea")
                 .HasColumnName("customer_email");
         });
 
         modelBuilder.Entity<LocalCustomer>(entity =>
         {
-            entity.HasKey(e => e.Email).HasName("customers_pkey");
+            entity.HasKey(e => e.EncryptedEmail).HasName("customers_pkey");
 
             entity.ToTable("customers");
 
-            entity.Property(e => e.Email)
+            entity.Property(e => e.EncryptedEmail)
                 .IsRequired()
-                .HasConversion(new Converters.EncryptionConverter()!)
                 .HasColumnType("bytea")
                 .HasColumnName("email");
             entity.Property(e => e.DateOfBirth)

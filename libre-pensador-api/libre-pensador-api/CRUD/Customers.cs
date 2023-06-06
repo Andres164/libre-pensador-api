@@ -22,7 +22,7 @@ namespace libre_pensador_api.CRUD
 
             Models.LocalCustomer? customer = this._dbContext.Customers
                 .AsEnumerable()
-                .FirstOrDefault( c => c.Email == customerEmail );
+                .FirstOrDefault( c => c.EncryptedEmail == customerEmail );
             if (customer == null)
                 return null;
             try
@@ -48,14 +48,14 @@ namespace libre_pensador_api.CRUD
             this._dbContext.SaveChanges();
             return this._dbContext.Customers
                 .AsEnumerable()
-                .FirstOrDefault(c => c.Email == newCustomer.Email);
+                .FirstOrDefault(c => c.EncryptedEmail == newCustomer.EncryptedEmail);
         }
 
         public Models.LocalCustomer? Delete(string customerEmail)
         {
             Models.LocalCustomer? customerToDelete = this._dbContext.Customers
                 .AsEnumerable()
-                .FirstOrDefault(c => c.Email == customerEmail);
+                .FirstOrDefault(c => c.EncryptedEmail == customerEmail);
             if (customerToDelete == null)
                 return null;
             string sql = "DELETE FROM customers WHERE loyverse_customer_id = @p0";
