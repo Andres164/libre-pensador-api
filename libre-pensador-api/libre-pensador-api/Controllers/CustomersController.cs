@@ -1,6 +1,7 @@
 ﻿using libre_pensador_api.CRUD;
 using libre_pensador_api.Interfaces;
 using libre_pensador_api.Loyverse;
+using libre_pensador_api.Mappers;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -32,24 +33,26 @@ namespace libre_pensador_api.Controllers
 
         // POST api/Clients
         [HttpPost]
-        [ProducesResponseType(200, Type = typeof(Models.LocalCustomer))]
+        [ProducesResponseType(200, Type = typeof(Models.ViewModels.LocalCustomerViewModel))]
         [ProducesResponseType(400)]
-        public IActionResult Post([FromBody] Models.LocalCustomer newCustomer)
+        public IActionResult Post([FromBody] Models.ViewModels.LocalCustomerViewModel newCustomerView)
         {
-            Models.LocalCustomer? createdCustomer = this._customers.Create(newCustomer);
-            return Ok(createdCustomer);
+            Models.LocalCustomer newCustomer = LocalCustomerMapper.ToModel(newCustomerView);
+            Models.LocalCustomer createdCustomer = this._customers.Create(newCustomer);
+            return Ok(LocalCustomerMapper.ToViewModel(createdCustomer));
         }
 
         // DELETE api/Clients/email@hotmail.com
         [HttpDelete("{email}")]
-        [ProducesResponseType(200, Type = typeof(Models.LocalCustomer))]
+        [ProducesResponseType(200, Type = typeof(Models.ViewModels.LocalCustomerViewModel))]
         [ProducesResponseType(400)]
         public IActionResult Delete(string email)
         {
             Models.LocalCustomer? deletedCustomer = this._customers.Delete(email);
             if (deletedCustomer == null)
                 return NotFound();
-            return Ok(deletedCustomer);
+            var deletedCustomerView = Mappers.LocalCustomerMapper.ToViewModel(deletedCustomer);
+            return Ok(deletedCustomerView);
         }
     }
 }

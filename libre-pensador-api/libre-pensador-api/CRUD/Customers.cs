@@ -42,14 +42,13 @@ namespace libre_pensador_api.CRUD
             }
         }
 
-        public Models.LocalCustomer? Create(Models.LocalCustomer newCustomer)
+        public Models.LocalCustomer Create(Models.LocalCustomer newCustomer)
         {
             try
             {
                 var createdCustomer = this._dbContext.Customers.Add(newCustomer);
                 this._dbContext.SaveChanges();
                 return createdCustomer.Entity;
-
             }
             catch (Exception ex)
             {
