@@ -35,7 +35,15 @@ namespace libre_pensador_api.Controllers
         [ProducesResponseType(400)]
         public IActionResult Put(string id, [FromBody] UpdateCardRequest requestBody)
         {
-            Models.Card? updatedCard = this._cards.Update(id, requestBody.CustomerEmail);
+            Models.Card? updatedCard;
+            try
+            {
+                updatedCard = this._cards.Update(id, requestBody.CustomerEmail);
+            }
+            catch (Exceptions.BadRequestException ex)
+            {
+                return BadRequest(ex.Message);
+            }
             if(updatedCard == null) 
                 return NotFound();
             return Ok(updatedCard);

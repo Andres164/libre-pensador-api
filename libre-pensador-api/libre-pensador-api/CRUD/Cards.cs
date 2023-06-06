@@ -25,7 +25,7 @@ namespace libre_pensador_api.CRUD
                 ILocalCustomerService localCustomerService = new CRUD.LocalCustomers(this._dbContext);
                 Models.LocalCustomer? customer = localCustomerService.ReadWithDecryptedEmail(updatedEmail);
                 if (customer == null)
-                    throw new ArgumentException($"there is no customers with the email: {updatedEmail}");
+                    throw new Exceptions.BadRequestException($"Customer with email {updatedEmail} not found.");
                 updatedEmail = customer.EncryptedEmail;
             }
 
