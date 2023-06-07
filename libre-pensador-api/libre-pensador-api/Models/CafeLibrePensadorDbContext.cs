@@ -22,6 +22,8 @@ public partial class CafeLibrePensadorDbContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
+    public virtual DbSet<LogEntry> LogEntries { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Card>(entity =>
@@ -80,6 +82,36 @@ public partial class CafeLibrePensadorDbContext : DbContext
                 .IsRequired()
                 .HasColumnType("boolean")
                 .HasColumnName("is_admin");
+        });
+
+        modelBuilder.Entity<LogEntry>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("log_entries_pkey");
+
+            entity.ToTable("log_entries");
+
+            entity.Property(e => e.Id)
+                .UseIdentityColumn()
+                .HasColumnName("id");
+
+            entity.Property(e => e.LogLevel)
+                .IsRequired()
+                .HasMaxLength(50)
+                .HasColumnName("log_level");
+
+            entity.Property(e => e.Message)
+                .IsRequired()
+                .HasColumnName("message");
+
+            entity.Property(e => e.Exception)
+                .HasColumnName("exception");
+
+            entity.Property(e => e.StackTrace)
+                .HasColumnName("stack_trace");
+
+            entity.Property(e => e.OccurredOn)
+                .IsRequired()
+                .HasColumnName("occurred_on");
         });
 
         OnModelCreatingPartial(modelBuilder);
