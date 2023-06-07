@@ -25,6 +25,7 @@ namespace libre_pensador_api.Controllers
         [ProducesResponseType(400)]
         public IActionResult Get(string email)
         {
+            email = email.ToLower();
             Task<Models.MergedCustomer?> customer = this._customers.ReadAsync(email);
             if(customer.Result == null)
                 return NotFound();
@@ -37,6 +38,7 @@ namespace libre_pensador_api.Controllers
         [ProducesResponseType(400)]
         public IActionResult Post([FromBody] Models.ViewModels.LocalCustomerViewModel newCustomerView)
         {
+            newCustomerView.Email = newCustomerView.Email.ToLower();
             Models.LocalCustomer newCustomer = LocalCustomerMapper.ToModel(newCustomerView);
             Models.LocalCustomer createdCustomer = this._customers.Create(newCustomer);
             return Ok(LocalCustomerMapper.ToViewModel(createdCustomer));
@@ -48,6 +50,7 @@ namespace libre_pensador_api.Controllers
         [ProducesResponseType(400)]
         public IActionResult Delete(string email)
         {
+            email = email.ToLower();
             Models.LocalCustomer? deletedCustomer = this._customers.Delete(email);
             if (deletedCustomer == null)
                 return NotFound();

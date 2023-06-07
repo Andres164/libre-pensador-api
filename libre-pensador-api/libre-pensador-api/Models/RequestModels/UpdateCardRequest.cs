@@ -2,7 +2,12 @@
 {
     public class UpdateCardRequest
     {
-        public string? CustomerEmail { get; set; }
+        private string? _cusotmerEmail;
+        public string? CustomerEmail 
+        {
+            get => this._cusotmerEmail;
+            set => this._cusotmerEmail = value != null ? value.ToLower() : value;
+        }
     }
 
 }
