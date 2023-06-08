@@ -61,7 +61,6 @@ namespace libre_pensador_api.Controllers
                 HttpOnly = true,
                 Secure = true,
                 SameSite = SameSiteMode.None,
-                Domain = "localhost",
                 Expires = DateTime.Today.AddDays(1)
             };
             Response.Cookies.Append("access_token", tokenString, cookieOptions);

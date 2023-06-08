@@ -68,13 +68,6 @@ builder.Services.AddAuthorization(options =>
 string[] allowedIps = builder.Configuration.GetSection("AllowedIps").Get<List<String>>().ToArray();
 IpConverter.ConvertIpsToOrigin(allowedIps);
 
-//DEBUGGING
-Console.WriteLine("Allowed IPs {");
-foreach (string ip in allowedIps)
-    Console.WriteLine("      "+ip);
-Console.WriteLine("}");
-//////////////////////////
-
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(AllowSpecificOrigins, 
