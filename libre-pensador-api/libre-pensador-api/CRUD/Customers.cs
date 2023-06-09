@@ -21,26 +21,26 @@ namespace libre_pensador_api.CRUD
         
         public async Task<Models.MergedCustomer?> ReadAsync(string customerEmail)
         {
-
-            Models.LocalCustomer? customer = this._dbContext.Customers
-                .AsEnumerable()
-                .FirstOrDefault( c => c.DecryptedEmail == customerEmail );
-            if (customer == null)
-                return null;
             try
             {
-                var loyverseCustomerInfo = await _loyverseApiClient.GetCustomerInfoAsync(customer.LoyverseCustomerId);
+                Models.LocalCustomer? customer = this._dbContext.Customers
+                    .AsEnumerable()
+                    .FirstOrDefault( c => c.DecryptedEmail == customerEmail );
+                if (customer == null)
+                    return null;
+
+                var loyverseCustomerInfo = await this._loyverseApiClient.GetCustomerInfoAsync(customer.LoyverseCustomerId);
                 if(loyverseCustomerInfo == null)
                 {
-                    Console.WriteLine("Couldn't find the customer in the loyverse API");
+                    this._logger.LogError(new Exception("Couldn't find the customer in the loyverse API"));
                     return null;
                 }
                 return new MergedCustomer(customer, loyverseCustomerInfo);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error fetching data from Loyverse API: " + ex.Message);
-                return null;
+                this._logger.LogError(ex);
+                throw;
             }
         }
 
@@ -54,8 +54,7 @@ namespace libre_pensador_api.CRUD
             }
             catch (Exception ex)
             {
-                // Log exception correctly
-                Console.WriteLine($"Unexpected exception when trying to Create the customer with email {newCustomer}: {ex}");
+                this._logger.LogError(ex);
                 throw;
             }
         }
@@ -75,8 +74,7 @@ namespace libre_pensador_api.CRUD
             }
             catch (Exception ex)
             {
-                // Log exception correctly
-                Console.WriteLine($"Unexpected exception when trying to Delete the customer with email {customerEmail}: {ex}");
+                this._logger.LogError(ex);
                 throw;
             }
         }

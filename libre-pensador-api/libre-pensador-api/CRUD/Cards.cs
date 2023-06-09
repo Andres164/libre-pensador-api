@@ -1,4 +1,5 @@
-﻿using libre_pensador_api.Interfaces;
+﻿using libre_pensador_api.Exceptions;
+using libre_pensador_api.Interfaces;
 using libre_pensador_api.Models;
 using Microsoft.CodeAnalysis;
 
@@ -17,26 +18,46 @@ namespace libre_pensador_api.CRUD
 
         public Models.Card? Read(string card_id)
         {
-            return this._dbContext.Cards.Find(card_id);
+            try
+            {
+                return this._dbContext.Cards.Find(card_id);
+            }
+            catch(Exception ex) 
+            {
+                this._logger.LogError(ex);
+                throw;
+            }
         }
 
         public Models.Card? Update(string card_id, string? updatedEmail)
         {
-            if(updatedEmail != null) 
+            try
             {
-                ILocalCustomerService localCustomerService = new CRUD.LocalCustomers(this._dbContext, this._logger);
-                Models.LocalCustomer? customer = localCustomerService.ReadWithDecryptedEmail(updatedEmail);
-                if (customer == null)
-                    throw new Exceptions.BadRequestException($"Customer with email {updatedEmail} not found.");
-                updatedEmail = customer.EncryptedEmail;
-            }
+                if (updatedEmail != null)
+                {
+                    ILocalCustomerService localCustomerService = new CRUD.LocalCustomers(this._dbContext, this._logger);
+                    Models.LocalCustomer? customer = localCustomerService.ReadWithDecryptedEmail(updatedEmail);
+                    if (customer == null)
+                        throw new Exceptions.BadRequestException($"Customer with email {updatedEmail} not found.");
+                    updatedEmail = customer.EncryptedEmail;
+                }
 
-            Models.Card? cardToUpdate = this._dbContext.Cards.Find(card_id);
-            if (cardToUpdate == null)
-                return null;
-            cardToUpdate.EncryptedCustomerEmail = updatedEmail;
-            this._dbContext.SaveChanges();
-            return cardToUpdate;
+                Models.Card? cardToUpdate = this._dbContext.Cards.Find(card_id);
+                if (cardToUpdate == null)
+                    return null;
+                cardToUpdate.EncryptedCustomerEmail = updatedEmail;
+                this._dbContext.SaveChanges();
+                return cardToUpdate;
+            }
+            catch(BadRequestException)
+            { 
+                throw;
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogError(ex);
+                throw;
+            }
         }
     }
 }

@@ -16,10 +16,18 @@ namespace libre_pensador_api.CRUD
 
         public Models.LocalCustomer? ReadWithDecryptedEmail(string decryptedEmail) 
         {
-            Models.LocalCustomer? cusotmer = this._dbContext.Customers
-                .AsEnumerable()
-                .FirstOrDefault(c => c.DecryptedEmail == decryptedEmail);
-            return cusotmer;
+            try
+            {
+                Models.LocalCustomer? cusotmer = this._dbContext.Customers
+                    .AsEnumerable()
+                    .FirstOrDefault(c => c.DecryptedEmail == decryptedEmail);
+                return cusotmer;
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogError(ex);
+                throw;
+            }
         }
     }
 }
