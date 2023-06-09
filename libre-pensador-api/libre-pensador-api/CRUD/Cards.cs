@@ -7,10 +7,12 @@ namespace libre_pensador_api.CRUD
     public class Cards : ICardsService
     {
         private readonly CafeLibrePensadorDbContext _dbContext;
+        private readonly ILoggingService _logger;
 
-        public Cards(CafeLibrePensadorDbContext dbContext)
+        public Cards(CafeLibrePensadorDbContext dbContext, ILoggingService loggingService)
         { 
             this._dbContext = dbContext;
+            this._logger = loggingService;
         }
 
         public Models.Card? Read(string card_id)
@@ -22,7 +24,7 @@ namespace libre_pensador_api.CRUD
         {
             if(updatedEmail != null) 
             {
-                ILocalCustomerService localCustomerService = new CRUD.LocalCustomers(this._dbContext);
+                ILocalCustomerService localCustomerService = new CRUD.LocalCustomers(this._dbContext, this._logger);
                 Models.LocalCustomer? customer = localCustomerService.ReadWithDecryptedEmail(updatedEmail);
                 if (customer == null)
                     throw new Exceptions.BadRequestException($"Customer with email {updatedEmail} not found.");

@@ -6,10 +6,12 @@ namespace libre_pensador_api.CRUD
     public class LocalCustomers : ILocalCustomerService
     {
         Models.CafeLibrePensadorDbContext _dbContext;
+        private readonly ILoggingService _logger;
 
-        public LocalCustomers(CafeLibrePensadorDbContext dbContext)
+        public LocalCustomers(CafeLibrePensadorDbContext dbContext, ILoggingService loggingService)
         {
             this._dbContext = dbContext;
+            this._logger = loggingService;
         }
 
         public Models.LocalCustomer? ReadWithDecryptedEmail(string decryptedEmail) 

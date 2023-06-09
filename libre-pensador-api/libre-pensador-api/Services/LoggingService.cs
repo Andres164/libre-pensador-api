@@ -1,12 +1,13 @@
-﻿using libre_pensador_api.Models;
+﻿using libre_pensador_api.Interfaces;
+using libre_pensador_api.Models;
 
 namespace libre_pensador_api.Services
 {
-    public  class LoggingService
+    public  class LoggingService : ILoggingService
     {
         private readonly CafeLibrePensadorDbContext _dbContext;
 
-        LoggingService(CafeLibrePensadorDbContext dbContext)
+        public LoggingService(CafeLibrePensadorDbContext dbContext)
         {
             this._dbContext = dbContext;
         }
@@ -23,7 +24,7 @@ namespace libre_pensador_api.Services
             {
                 string path = "Logs/error-log.txt";
                 Directory.CreateDirectory(Path.GetDirectoryName(path));
-                System.IO.File.AppendAllText(path, $"Unexpected exception when saving log entry: {ex}. \n\nException being logged: {logEx} With Message {logEx.Message}. At: { ocurredOn ?? DateTime.Now } ");
+                System.IO.File.AppendAllText(path, $"\n\n[{ocurredOn ?? DateTime.Now}] Unexpected exception when saving log entry: {ex}. \n# Exception being logged #: {logEx} With Message {logEx.Message}.");
             }
         }
     }

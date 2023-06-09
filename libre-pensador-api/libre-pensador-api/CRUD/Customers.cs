@@ -10,11 +10,13 @@ namespace libre_pensador_api.CRUD
     {
         private readonly LoyverseApiClient _loyverseApiClient;
         private readonly CafeLibrePensadorDbContext _dbContext;
+        private readonly ILoggingService _logger;
 
-        public Customers(LoyverseApiClient loyverseApiClient, CafeLibrePensadorDbContext dbContext)
+        public Customers(LoyverseApiClient loyverseApiClient, CafeLibrePensadorDbContext dbContext, ILoggingService loggingService)
         {
             this._loyverseApiClient = loyverseApiClient;
             this._dbContext = dbContext;
+            this._logger = loggingService;
         }
         
         public async Task<Models.MergedCustomer?> ReadAsync(string customerEmail)

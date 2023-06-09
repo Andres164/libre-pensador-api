@@ -111,6 +111,7 @@ public partial class CafeLibrePensadorDbContext : DbContext
 
             entity.Property(e => e.OccurredOn)
                 .IsRequired()
+                .HasColumnType("timestamp without time zone")
                 .HasColumnName("occurred_on");
         });
 

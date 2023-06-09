@@ -90,6 +90,8 @@ builder.Services.AddHttpClient<LoyverseApiClient>(client =>
 builder.Services.AddDbContext<CafeLibrePensadorDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("CafeLibrePensadorDb")));
 
+builder.Services.AddScoped<ILoggingService, LoggingService>();
+
 builder.Services.AddScoped<ICardsService, Cards>();
 builder.Services.AddScoped<ICustomersService, Customers>();
 builder.Services.AddScoped<IUserService, Users>();

@@ -8,10 +8,12 @@ namespace libre_pensador_api.CRUD
     public class Users : IUserService
     {
         private readonly CafeLibrePensadorDbContext _dbContext;
+        private readonly ILoggingService _logger;
 
-        public Users(CafeLibrePensadorDbContext dbContext)
+        public Users(CafeLibrePensadorDbContext dbContext, ILoggingService loggingService)
         {
             this._dbContext = dbContext;
+            this._logger = loggingService;
         }
 
         public Models.User? Read(string userName)
@@ -22,8 +24,7 @@ namespace libre_pensador_api.CRUD
             }
             catch (Exception ex)
             {
-                // Log exception correctly
-                Console.WriteLine($"Unexpected exception when trying to read user {userName}: {ex}");
+                this._logger.LogError(ex);
                 throw;
             }
         }
@@ -38,8 +39,7 @@ namespace libre_pensador_api.CRUD
             }
             catch (Exception ex)
             {
-                // Log exception correctly
-                Console.WriteLine($"Unexpected exception when trying to Create user {newUser.UserName}: {ex}");
+                this._logger.LogError(ex);
                 throw;
             }
         }
@@ -57,8 +57,7 @@ namespace libre_pensador_api.CRUD
             }
             catch (Exception ex)
             {
-                // Log exception correctly
-                Console.WriteLine($"Unexpected exception when trying to Delete user {userName}: {ex}");
+                this._logger.LogError(ex);
                 throw;
             }
         }
@@ -75,9 +74,8 @@ namespace libre_pensador_api.CRUD
                 return userToUpdate;
             }
             catch(Exception ex) 
-            { 
-                // Log exception correctly
-                Console.WriteLine($"Unexpected exception when trying to Update user {userName}: {ex}");
+            {
+                this._logger.LogError(ex);
                 throw;
             }
         }

@@ -1,4 +1,6 @@
-﻿namespace libre_pensador_api.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace libre_pensador_api.Models
 {
     public class LogEntry
     {
@@ -8,6 +10,8 @@
         public string? Exception { get; set; }
         public string? StackTrace { get; set; }
         public DateTime OccurredOn { get; set; }
+
+        public LogEntry() { }
 
         public LogEntry(Exception ex, DateTime? occurredOn = null, string logLevel = "Error")
         {
