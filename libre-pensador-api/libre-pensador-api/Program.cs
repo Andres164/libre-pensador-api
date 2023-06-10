@@ -87,10 +87,13 @@ builder.Services.AddHttpClient<LoyverseApiClient>(client =>
     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 });
 
-builder.Services.AddDbContext<CafeLibrePensadorDbContext>(options =>
+builder.Services.AddDbContextFactory<CafeLibrePensadorDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("CafeLibrePensadorDb")));
 
 builder.Services.AddScoped<ILoggingService, LoggingService>();
+
+builder.Services.AddDbContext<CafeLibrePensadorDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("CafeLibrePensadorDb")));
 
 builder.Services.AddScoped<ICardsService, Cards>();
 builder.Services.AddScoped<ICustomersService, Customers>();

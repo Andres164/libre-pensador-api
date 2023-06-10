@@ -1,24 +1,26 @@
 ﻿using libre_pensador_api.Interfaces;
 using libre_pensador_api.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace libre_pensador_api.Services
 {
     public  class LoggingService : ILoggingService
     {
-        private readonly CafeLibrePensadorDbContext _dbContext;
+        private readonly IDbContextFactory<CafeLibrePensadorDbContext> _dbContextFactory;
 
-        public LoggingService(CafeLibrePensadorDbContext dbContext)
+        public LoggingService(IDbContextFactory<CafeLibrePensadorDbContext> dbContextFactory)
         {
-            this._dbContext = dbContext;
+            this._dbContextFactory = dbContextFactory;
         }
 
         public void LogError(Exception logEx, DateTime? ocurredOn = null) 
         {
             try
             {
+                using var dbContext = this._dbContextFactory.CreateDbContext();
                 LogEntry logEntry = new LogEntry(logEx, ocurredOn);
-                this._dbContext.LogEntries.Add(logEntry);
-                this._dbContext.SaveChanges();
+                dbContext.LogEntries.Add(logEntry);
+                dbContext.SaveChanges();
             }
             catch (Exception ex)
             {
