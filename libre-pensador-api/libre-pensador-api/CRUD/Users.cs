@@ -1,5 +1,6 @@
 ﻿using libre_pensador_api.Interfaces;
 using libre_pensador_api.Models;
+using libre_pensador_api.Models.RequestModels;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,6 +28,16 @@ namespace libre_pensador_api.CRUD
                 this._logger.LogError(ex);
                 throw;
             }
+        }
+
+        public Models.User? ReadUserWhitCredentials(UserCredentials credentials)
+        {
+            var employee = this.Read(credentials.Username);
+            if (employee == null)
+                return null;
+
+            bool areCredentialsValid = employee.UserName == credentials.Username && Utilities.HashingUtility.ValidatePassword(credentials.Password, employee.Password);
+            return areCredentialsValid ? employee : null;
         }
 
         public Models.User? Create(Models.User newUser)

@@ -15,12 +15,12 @@ namespace libre_pensador_api.Controllers
     public class AuthenticationController : ControllerBase
     {
         private readonly IConfiguration _configuration;
-        private readonly IUserService _employees;
+        private readonly IUserService _users;
 
-        public AuthenticationController(IConfiguration configuration, IUserService employees)
+        public AuthenticationController(IConfiguration configuration, IUserService users)
         {
             this._configuration = configuration;
-            this._employees = employees;
+            this._users = users;
         }
 
         [AllowAnonymous]
@@ -29,7 +29,7 @@ namespace libre_pensador_api.Controllers
         [ProducesResponseType(401)]
         public IActionResult Authenticate([FromBody] UserCredentials credentials)
         {
-            Models.User? user = this.GetUserWhitCredentials(credentials);
+            Models.User? user = this._users.GetUserWhitCredentials(credentials);
             if (user == null)
                 return Unauthorized();
 
@@ -75,17 +75,6 @@ namespace libre_pensador_api.Controllers
         public IActionResult CheckIfAuthenticated()
         {
             return Ok(new { status = "Authenticated" });
-        }
-
-
-        private Models.User? GetUserWhitCredentials(UserCredentials credentials)
-        {
-            var employee = this._employees.Read(credentials.Username);
-            if (employee == null)
-                return null;
-
-            bool areCredentialsValid = employee.UserName == credentials.Username && Utilities.HashingUtility.ValidatePassword(credentials.Password, employee.Password);
-            return areCredentialsValid ? employee : null;
         }
     }
 }
