@@ -2,6 +2,7 @@
 using libre_pensador_api.Models.RequestModels;
 using libre_pensador_api.Interfaces;
 using libre_pensador_api.Models;
+using Microsoft.AspNetCore.Authorization;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -16,6 +17,17 @@ namespace libre_pensador_api.Controllers
         public CardsController(ICardsService cards)
         {
             this._cards = cards;
+        }
+
+        // GET api/Cards/
+        [Authorize(Policy = "AdminOnly")]
+        [HttpGet]
+        [ProducesResponseType(200, Type = typeof(Models.Card))]
+        [ProducesResponseType(400)]
+        public IActionResult Get() 
+        {
+            List<Models.Card> cards = this._cards.ReadCards();
+            return Ok(cards);
         }
 
         // GET api/Cards/QR00005

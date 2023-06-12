@@ -16,6 +16,20 @@ namespace libre_pensador_api.CRUD
             this._logger = loggingService;
         }
 
+        public List<Models.Card> ReadCards() 
+        {
+            try
+            {
+                var orderedCards = this._dbContext.Cards.OrderBy(c => c.CardId).ToList();
+                return orderedCards;
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogError(ex);
+                throw;
+            }
+        }
+
         public Models.Card? Read(string card_id)
         {
             try

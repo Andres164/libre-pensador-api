@@ -29,7 +29,7 @@ namespace libre_pensador_api.Controllers
         [ProducesResponseType(401)]
         public IActionResult Authenticate([FromBody] UserCredentials credentials)
         {
-            Models.User? user = this._users.GetUserWhitCredentials(credentials);
+            Models.User? user = this._users.ReadUserWhitCredentials(credentials);
             if (user == null)
                 return Unauthorized();
 

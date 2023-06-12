@@ -28,7 +28,9 @@ public partial class CafeLibrePensadorDbContext : DbContext
     {
         modelBuilder.Entity<Card>(entity =>
         {
-            entity.HasKey(e => e.CardId).HasName("Cards_pkey");
+            entity.HasKey(e => e.CardId).HasName("cards_pkey");
+
+            entity.ToTable("cards");
 
             entity.Property(e => e.CardId)
                 .HasMaxLength(7)
