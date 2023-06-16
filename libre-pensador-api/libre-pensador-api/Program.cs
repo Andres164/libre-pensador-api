@@ -73,7 +73,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(AllowSpecificOrigins, 
     policy =>
     {
-        policy.WithOrigins(allowedIps)
+        policy.WithOrigins(allowedIps) // Allow any origin: SetIsOriginAllowed(origin => true)
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();

@@ -24,6 +24,10 @@ public partial class CafeLibrePensadorDbContext : DbContext
 
     public virtual DbSet<LogEntry> LogEntries { get; set; }
 
+    public virtual DbSet<Expense> Expenses { get; set; }
+    
+    public virtual DbSet<ExpenseCategory> ExpenseCategories { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Card>(entity =>
@@ -115,6 +119,43 @@ public partial class CafeLibrePensadorDbContext : DbContext
                 .IsRequired()
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("occurred_on");
+        });
+
+        modelBuilder.Entity<Expense>(entity =>
+        {
+            entity.ToTable("expenses");
+
+            entity.HasKey(e => e.ExpenseId).HasName("expenses_pkey");
+
+            entity.Property(e => e.ExpenseId)
+                .UseIdentityColumn()
+                .HasColumnName("expense_id");
+            entity.Property(e => e.Type)
+                .HasColumnName("type");
+            entity.Property(e => e.Importance)
+                .HasColumnName("importance");
+            entity.Property(e => e.CategoryId)
+                .HasColumnName("category_id");
+            entity.Property(e => e.AmountSpent)
+                .HasColumnType("decimal(8,2)")
+                .HasColumnName("amount_spent");
+            entity.Property(e => e.Date)
+                .HasColumnName("date");
+            entity.Property(e => e.Description)
+                .HasColumnName("description");
+        });
+
+        modelBuilder.Entity<ExpenseCategory>(entity =>
+        {
+            entity.ToTable("expense_categories");
+
+            entity.HasKey(e => e.ExpenseCategoryId).HasName("expense_category_pkey");
+
+            entity.Property(e => e.ExpenseCategoryId)
+                .UseIdentityColumn()
+                .HasColumnName("category_id");
+            entity.Property(e => e.ExpenseCategoryName)
+                .HasColumnName("category_name");
         });
 
         OnModelCreatingPartial(modelBuilder);
