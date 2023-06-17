@@ -15,7 +15,7 @@ public partial class CafeLibrePensadorDbContext : DbContext
         : base(options)
     {
     }
-
+    
     public virtual DbSet<Card> Cards { get; set; }
 
     public virtual DbSet<LocalCustomer> Customers { get; set; }
@@ -131,15 +131,20 @@ public partial class CafeLibrePensadorDbContext : DbContext
                 .UseIdentityColumn()
                 .HasColumnName("expense_id");
             entity.Property(e => e.Type)
+                .IsRequired()
                 .HasColumnName("type");
             entity.Property(e => e.Importance)
+                .IsRequired()
                 .HasColumnName("importance");
             entity.Property(e => e.CategoryId)
+                .IsRequired()
                 .HasColumnName("category_id");
             entity.Property(e => e.AmountSpent)
+                .IsRequired()
                 .HasColumnType("decimal(8,2)")
                 .HasColumnName("amount_spent");
             entity.Property(e => e.Date)
+                .IsRequired()
                 .HasColumnName("date");
             entity.Property(e => e.Description)
                 .HasColumnName("description");
@@ -149,12 +154,18 @@ public partial class CafeLibrePensadorDbContext : DbContext
         {
             entity.ToTable("expense_categories");
 
+            entity.HasIndex(e => e.ExpenseCategoryName)
+                .IsUnique();
+
             entity.HasKey(e => e.ExpenseCategoryId).HasName("expense_category_pkey");
 
             entity.Property(e => e.ExpenseCategoryId)
                 .UseIdentityColumn()
                 .HasColumnName("category_id");
             entity.Property(e => e.ExpenseCategoryName)
+                .HasColumnType("character varying")
+                .HasMaxLength(40)
+                .IsRequired()
                 .HasColumnName("category_name");
         });
 
