@@ -1,13 +1,7 @@
-﻿using System.Diagnostics;
-
-namespace libre_pensador_api.Models
+﻿namespace libre_pensador_api.Models.RequestModels
 {
-    public class Expense
+    public class UpdatedExpenseRequest
     {
-        public enum Types { Personal, Buissines };
-        public enum ImportanceCategories { Essential, NonEssential, Luxury};
-
-        public int ExpenseId { get; set; }
         public Expense.Types Type { get; set; }
         public Expense.ImportanceCategories Importance { get; set; }
         public int CategoryId { get; set; }

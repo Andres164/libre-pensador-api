@@ -8,6 +8,6 @@ namespace libre_pensador_api.Interfaces
         Models.User? ReadUserWhitCredentials(UserCredentials credentials);
         Models.User? Create(Models.User newUser);
         Models.User? Delete(string userName);
-        public Models.User? Update(string userName, Models.RequestModels.UpdateUserRequest updatedUser);
+        Models.User? Update(string userName, Models.RequestModels.UpdateUserRequest updatedUser);
     }
 }
