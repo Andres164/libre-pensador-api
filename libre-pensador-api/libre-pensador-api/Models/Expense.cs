@@ -13,6 +13,6 @@ namespace libre_pensador_api.Models
         public int CategoryId { get; set; }
         public decimal AmountSpent { get; set; }
         public DateTime Date { get; set; }
-        public string Description { get; set; } = null!;
+        public string? Description { get; set; } = null!;
     }
 }

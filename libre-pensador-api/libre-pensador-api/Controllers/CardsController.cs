@@ -26,7 +26,7 @@ namespace libre_pensador_api.Controllers
         [ProducesResponseType(400)]
         public IActionResult Get() 
         {
-            List<Models.Card> cards = this._cards.ReadCards();
+            List<Models.Card> cards = this._cards.ReadAll();
             return Ok(cards);
         }
 

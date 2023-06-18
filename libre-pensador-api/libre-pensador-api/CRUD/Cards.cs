@@ -16,7 +16,7 @@ namespace libre_pensador_api.CRUD
             this._logger = loggingService;
         }
 
-        public List<Models.Card> ReadCards() 
+        public List<Models.Card> ReadAll() 
         {
             try
             {
