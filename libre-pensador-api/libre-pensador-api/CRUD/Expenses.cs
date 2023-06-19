@@ -2,6 +2,7 @@
 using libre_pensador_api.Mappers;
 using libre_pensador_api.Models;
 using libre_pensador_api.Models.RequestModels;
+using libre_pensador_api.Models.ViewModels;
 
 namespace libre_pensador_api.CRUD
 {
@@ -17,13 +18,21 @@ namespace libre_pensador_api.CRUD
 
         }
 
-        List<Expense>? ReadAll()
+        public List<ExpenseViewModel>? ReadAll()
         {
             try
             {
-                var expensesOrderedByNewest = this._dbContext.Expenses.OrderByDescending(e => e.Date).ToList();  // the amount of returned rows can be set with .Take(amount)
-                int resultCount = expensesOrderedByNewest.Count;
-                return resultCount >= 1 ? expensesOrderedByNewest : null;
+                List<Expense> expenses = this._dbContext.Expenses.OrderByDescending(e => e.Date).ToList();  // the amount of returned rows can be set with .Take(amount)
+                if (expenses.Count < 1)
+                    return null;
+                List<ExpenseViewModel> expenseViews = new List<ExpenseViewModel>();
+                foreach (Expense expense in expenses)
+                {
+                    var expenseCategory = this._dbContext.ExpenseCategories.Find(expense.CategoryId);
+                    var categoryName = expenseCategory!.ExpenseCategoryName; // CategoryId is a foreign key, meaning expenseCategory will not be null
+                    expenseViews.Prepend(ExpenseMapper.ToViewModel(expense, categoryName));
+                }
+                return expenseViews;
             }
             catch (Exception ex) 
             { 
@@ -31,19 +40,24 @@ namespace libre_pensador_api.CRUD
                 throw;
             }
         }
-        Expense? Read(int expenseId)
+        public ExpenseViewModel? Read(int expenseId)
         {
             try
             {
-                return this._dbContext.Expenses.Find(expenseId);
+                var expense = this._dbContext.Expenses.Find(expenseId);
+                if (expense == null)
+                    return null;
+                var expenseCategory = this._dbContext.ExpenseCategories.Find(expense.CategoryId);
+                var categoryName = expenseCategory!.ExpenseCategoryName;
+                return ExpenseMapper.ToViewModel(expense, categoryName);
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 this._logger.LogError(ex);
                 throw;
             }
         }
-        Expense? Create(ExpenseRequest newExpense)
+        public Expense? Create(ExpenseRequest newExpense)
         {
             try
             {
@@ -58,11 +72,11 @@ namespace libre_pensador_api.CRUD
                 throw;
             }
         }
-        Expense? Delete(int expenseId)
+        public Expense? Delete(int expenseId)
         {
 
         }
-        Expense? Update(int expenseId, ExpenseRequest updatedExpense)
+        public Expense? Update(int expenseId, ExpenseRequest updatedExpense)
         {
                             
         }
