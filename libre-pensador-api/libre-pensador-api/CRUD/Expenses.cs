@@ -18,19 +18,18 @@ namespace libre_pensador_api.CRUD
 
         }
 
-        public List<ExpenseViewModel>? ReadAll()
+        public List<ExpenseViewModel> ReadAll()
         {
             try
             {
                 List<Expense> expenses = this._dbContext.Expenses.OrderByDescending(e => e.Date).ToList();  // the amount of returned rows can be set with .Take(amount)
-                if (expenses.Count < 1)
-                    return null;
-                List<ExpenseViewModel> expenseViews = new List<ExpenseViewModel>();
-                foreach (Expense expense in expenses)
+                List<ExpenseViewModel> expenseViews = new List<ExpenseViewModel>(expenses.Count);
+
+                foreach (var expense in expenses)
                 {
                     var expenseCategory = this._dbContext.ExpenseCategories.Find(expense.CategoryId);
                     var categoryName = expenseCategory!.ExpenseCategoryName; // CategoryId is a foreign key, meaning expenseCategory will not be null
-                    expenseViews.Prepend(ExpenseMapper.ToViewModel(expense, categoryName));
+                    expenseViews.Add(ExpenseMapper.ToViewModel(expense, categoryName));
                 }
                 return expenseViews;
             }

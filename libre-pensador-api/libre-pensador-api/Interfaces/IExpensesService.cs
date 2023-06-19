@@ -6,7 +6,7 @@ namespace libre_pensador_api.Interfaces
 {
     public interface IExpensesService
     {
-        List<ExpenseViewModel>? ReadAll();
+        List<ExpenseViewModel> ReadAll();
         ExpenseViewModel? Read(int expenseId);
         Expense? Create(ExpenseRequest newExpense);
         Expense? Delete(int expenseId);

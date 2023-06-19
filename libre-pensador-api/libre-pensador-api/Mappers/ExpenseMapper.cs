@@ -23,7 +23,7 @@ namespace libre_pensador_api.Mappers
 
         public static Expense ToModel(ExpenseRequest expenseRequest)
         {
-            return new ExpenseViewModel
+            return new Expense
             {
                 ExpenseId = 0,
                 Type = expenseRequest.Type,

@@ -6,7 +6,7 @@ namespace libre_pensador_api.Interfaces
 {
     public interface IExpenseCategoriesService
     {
-        List<ExpenseCategory>? ReadAll();
+        List<ExpenseCategory> ReadAll();
         ExpenseCategory? Read(int categoryId);
         ExpenseCategory? Create(ExpenseCategoryViewModel newCategory);
         ExpenseCategory? Delete(int categoryId);

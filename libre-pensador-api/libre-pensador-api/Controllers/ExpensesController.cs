@@ -1,4 +1,5 @@
 ﻿using libre_pensador_api.Interfaces;
+using libre_pensador_api.Models;
 using libre_pensador_api.Models.RequestModels;
 using libre_pensador_api.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +24,8 @@ namespace libre_pensador_api.Controllers
         [ProducesResponseType(200, Type = typeof(List<ExpenseViewModel>))]
         public IActionResult Get()
         {
-            
+            List<ExpenseViewModel> expenses = this._expenses.ReadAll();
+            return Ok(expenses);
         }
 
         // GET api/<ExpensesController>/5
@@ -31,31 +33,43 @@ namespace libre_pensador_api.Controllers
         [ProducesResponseType(200, Type = typeof(ExpenseViewModel))]
         public IActionResult Get(int id)
         {
-            
+            ExpenseViewModel? expense = this._expenses.Read(id);
+            if (expense == null)
+                return NotFound();
+            return Ok(expense);
         }
 
         // POST api/<ExpensesController>
         [HttpPost]
-        [ProducesResponseType(200, Type = typeof(ExpenseViewModel))]
-        public IActionResult Post([FromBody] ExpenseRequest expense)
+        [ProducesResponseType(200, Type = typeof(Expense))]
+        public IActionResult Post([FromBody] ExpenseRequest newExpense)
         {
-
+            Expense? createdExpense = this._expenses.Create(newExpense);
+            if(createdExpense == null)
+                return NotFound();
+            return Ok(createdExpense);
         }
 
         // PUT api/<ExpensesController>/5
         [HttpPut("{id}")]
-        [ProducesResponseType(200, Type = typeof(ExpenseViewModel))]
-        public IActionResult Put(int id, [FromBody] ExpenseRequest expense)
+        [ProducesResponseType(200, Type = typeof(Expense))]
+        public IActionResult Put(int id, [FromBody] ExpenseRequest updateExpense)
         {
-
+            Expense? updatedExpense = this._expenses.Update(id, updateExpense);
+            if (updatedExpense == null)
+                return NotFound();
+            return Ok(updatedExpense);
         }
 
         // DELETE api/<ExpensesController>/5
         [HttpDelete("{id}")]
-        [ProducesResponseType(200, Type = typeof(ExpenseViewModel))]
+        [ProducesResponseType(200, Type = typeof(Expense))]
         public IActionResult Delete(int id)
         {
-
+            Expense? deletedExpense = this._expenses.Delete(id);
+            if(deletedExpense == null)
+                return NotFound();
+            return Ok(deletedExpense);
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using Org.BouncyCastle.Asn1.Mozilla;
-
-namespace libre_pensador_api.Models
+﻿namespace libre_pensador_api.Models
 {
     public class ExpenseCategory
     {
