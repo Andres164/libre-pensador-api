@@ -20,6 +20,7 @@ namespace libre_pensador_api.Mappers
                 CategoryName = ExpenseCategoryName
             };
         }
+
         public static Expense ToModel(ExpenseRequest expenseRequest)
         {
             return new ExpenseViewModel

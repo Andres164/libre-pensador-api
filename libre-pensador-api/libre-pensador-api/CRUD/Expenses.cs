@@ -74,11 +74,44 @@ namespace libre_pensador_api.CRUD
         }
         public Expense? Delete(int expenseId)
         {
-
+            try
+            {
+                var expenseToDelete = this._dbContext.Expenses.Find(expenseId);
+                if(expenseToDelete == null)
+                    return null;
+                var deletedExpense = this._dbContext.Expenses.Remove(expenseToDelete);
+                this._dbContext.SaveChanges();
+                return deletedExpense.Entity;
+            }
+            catch(Exception ex)
+            {
+                this._logger.LogError(ex);
+                throw;
+            }
         }
         public Expense? Update(int expenseId, ExpenseRequest updatedExpense)
         {
-                            
+            try
+            {
+                var expenseToUpdate = this._dbContext.Expenses.Find(expenseId);
+                if (expenseToUpdate == null)
+                    return null;
+
+                expenseToUpdate.Type = updatedExpense.Type;
+                expenseToUpdate.Importance = updatedExpense.Importance;
+                expenseToUpdate.CategoryId = updatedExpense.CategoryId;
+                expenseToUpdate.AmountSpent = updatedExpense.AmountSpent;
+                expenseToUpdate.Date = updatedExpense.Date;
+                expenseToUpdate.Description = updatedExpense.Description;
+
+                this._dbContext.SaveChanges();
+                return expenseToUpdate;
+            }
+            catch (Exception ex)
+            { 
+                this._logger.LogError(ex);
+                throw;
+            }
         }
     }
 }

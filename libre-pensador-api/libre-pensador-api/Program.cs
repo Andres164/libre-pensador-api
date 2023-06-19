@@ -98,6 +98,8 @@ builder.Services.AddDbContext<CafeLibrePensadorDbContext>(options =>
 builder.Services.AddScoped<ICardsService, Cards>();
 builder.Services.AddScoped<ICustomersService, Customers>();
 builder.Services.AddScoped<IUserService, Users>();
+builder.Services.AddScoped<IExpensesService, Expenses>();
+builder.Services.AddScoped<IExpenseCategoriesService, ExpenseCategories>();
 
 builder.Services.AddControllers()
     .AddApplicationPart(typeof(AuthenticationController).Assembly);
@@ -107,6 +109,9 @@ builder.Services.AddControllers()
 
 builder.Services.AddControllers()
     .AddApplicationPart(typeof(CustomersController).Assembly);
+
+builder.Services.AddControllers()
+    .AddApplicationPart(typeof(ExpensesController).Assembly);
 
 var emailSection = builder.Configuration.GetSection("Email");
 var senderMailboxAddress = new MailboxAddress(emailSection["LogSenderName"], emailSection["LogSenderEmail"]);
