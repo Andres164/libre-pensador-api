@@ -1,8 +1,9 @@
 ﻿using libre_pensador_api.Interfaces;
 using libre_pensador_api.Mappers;
-using libre_pensador_api.Models;
-using libre_pensador_api.Models.ViewModels;
+using SharedModels.Models;
+using SharedModels.Models.ViewModels;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using libre_pensador_api.Models;
 
 namespace libre_pensador_api.CRUD
 {

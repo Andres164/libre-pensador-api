@@ -1,4 +1,4 @@
-﻿namespace libre_pensador_api.Models.ViewModels
+﻿namespace SharedModels.Models.ViewModels
 {
     public class ExpenseCategoryViewModel
     {

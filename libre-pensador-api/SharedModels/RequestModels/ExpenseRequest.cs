@@ -1,4 +1,4 @@
-﻿namespace libre_pensador_api.Models.RequestModels
+﻿namespace SharedModels.Models.RequestModels
 {
     public class ExpenseRequest
     {

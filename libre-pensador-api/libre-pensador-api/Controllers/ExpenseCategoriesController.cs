@@ -1,6 +1,6 @@
 ﻿using libre_pensador_api.Interfaces;
-using libre_pensador_api.Models;
-using libre_pensador_api.Models.ViewModels;
+using SharedModels.Models;
+using SharedModels.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using SharedModels.Models;
 
 namespace libre_pensador_api.Models;
 

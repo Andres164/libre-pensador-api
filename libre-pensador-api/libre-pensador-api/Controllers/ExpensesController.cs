@@ -1,7 +1,7 @@
 ﻿using libre_pensador_api.Interfaces;
-using libre_pensador_api.Models;
-using libre_pensador_api.Models.RequestModels;
-using libre_pensador_api.Models.ViewModels;
+using SharedModels.Models;
+using SharedModels.Models.RequestModels;
+using SharedModels.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860

@@ -1,6 +1,6 @@
-﻿using libre_pensador_api.Models;
-using libre_pensador_api.Models.RequestModels;
-using libre_pensador_api.Models.ViewModels;
+﻿using SharedModels.Models;
+using SharedModels.Models.RequestModels;
+using SharedModels.Models.ViewModels;
 
 namespace libre_pensador_api.Mappers
 {

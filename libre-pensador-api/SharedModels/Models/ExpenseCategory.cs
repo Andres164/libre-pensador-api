@@ -1,4 +1,4 @@
-﻿namespace libre_pensador_api.Models
+﻿namespace SharedModels.Models
 {
     public class ExpenseCategory
     {

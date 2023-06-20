@@ -5,6 +5,8 @@ VisualStudioVersion = 17.2.32526.322
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "libre-pensador-api", "libre-pensador-api\libre-pensador-api.csproj", "{66C332B1-A797-408A-95D6-5495B40384DC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedModels", "SharedModels\SharedModels.csproj", "{8A4AE846-F496-4E3E-9643-E81478A9B7D7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{66C332B1-A797-408A-95D6-5495B40384DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{66C332B1-A797-408A-95D6-5495B40384DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{66C332B1-A797-408A-95D6-5495B40384DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A4AE846-F496-4E3E-9643-E81478A9B7D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A4AE846-F496-4E3E-9643-E81478A9B7D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A4AE846-F496-4E3E-9643-E81478A9B7D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A4AE846-F496-4E3E-9643-E81478A9B7D7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
