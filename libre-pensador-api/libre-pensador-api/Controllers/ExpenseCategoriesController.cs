@@ -20,6 +20,7 @@ namespace libre_pensador_api.Controllers
             this._expenseCategories = expenseCategoriesService;
         }
 
+        [Authorize]
         // GET: api/<ExpenseCategoriesController>
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(ExpenseCategory))]
@@ -28,6 +29,7 @@ namespace libre_pensador_api.Controllers
             return Ok(this._expenseCategories.ReadAll());
         }
 
+        [Authorize]
         // GET api/<ExpenseCategoriesController>/5
         [HttpGet("{id}")]
         [ProducesResponseType(200, Type = typeof(ExpenseCategoryViewModel))]
