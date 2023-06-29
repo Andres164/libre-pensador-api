@@ -1,8 +1,0 @@
-link card-customer:
-scan card
-search entered email
-fetch all customers in loyverse api
-query the entered email in the loyverse response
-if found create a new customer in the local database saving the customerId and DoB
-query scanned card in the DB and update, set the customer_email to the new customer email
-
