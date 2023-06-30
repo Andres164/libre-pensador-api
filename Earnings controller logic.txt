@@ -1,0 +1,48 @@
+Ganancias del mes
+| Ventas - Gastos
+  | Ventas: Sumar todos los recivos del periodo(loyverseAPI)   Gastos: Sumando gastos del periodo (Local Db)
+  
+
+ReceiptRequest:
+created_at_min
+created_at_max
+limit
+cursor
+
+ReceiptViewModel:
+total_money
+
+
+
+Quiero saber ganancias del mes
+1- request to librePensador/api/earnings
+   EarningsRequest:
+   - PeriodStart	DateOnly
+   - PeriodEnd  	DateOnly
+
+2- Map EarningsRequest to ReceiptsRequest
+   EarningsRequestMapper.ToLoyverseReceiptsRequest()
+   - PeriodStart -> created_at_min
+   - PeriodEnd   -> created_at_max
+
+3- LocalAPI request to Loyverse/api/receipts 
+   ReceiptsRequest
+   - created_at_min	DateTime
+   - created_at_max	DateTime
+
+4- deserialize response to
+   ReceiptViewModel
+   - total_money	double
+   - total_tax		double
+   - receipt_type	string (SALE, REFUND)
+
+5- foreach receipt in receipts IF receipt_type == SALE
+    NetIncome += total_money and IncomeBeforeTaxes += ( total_money + total_tax )
+   Else
+    NetIncome -= total_money and IncomeBeforeTaxes -= ( total_money + total_tax )
+
+   PeriodIncome (Model)
+   - IncomeBeforeTaxes	double
+   - NetIncome		double
+
+6- Return response ( PeriodIncome )
