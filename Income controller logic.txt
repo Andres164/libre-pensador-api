@@ -25,13 +25,13 @@ Quiero saber ganancias del mes
    - PeriodStart -> created_at_min
    - PeriodEnd   -> created_at_max
 
-3- LocalAPI request to Loyverse/api/receipts 
+3- LocalAPI request to Loyverse/api/receipts
    ReceiptsRequest
    - created_at_min	DateTime
    - created_at_max	DateTime
 
 4- deserialize response to
-   ReceiptViewModel
+   List ReceiptViewModel
    - total_money	double
    - total_tax		double
    - receipt_type	string (SALE, REFUND)

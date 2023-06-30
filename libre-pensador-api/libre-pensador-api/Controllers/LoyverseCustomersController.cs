@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("api/[controller]")]
-public class LoyverseController : ControllerBase
+public class LoyverseCustomersController : ControllerBase
 {
-    private readonly LoyverseApiClient _loyverseApiClient;
+    private readonly LoyverseCustomersApiClient _loyverseApiClient;
 
-    public LoyverseController(LoyverseApiClient loyverseApiClient)
+    public LoyverseCustomersController(LoyverseCustomersApiClient loyverseApiClient)
     {
         _loyverseApiClient = loyverseApiClient;
     }

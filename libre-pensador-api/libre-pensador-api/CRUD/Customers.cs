@@ -8,11 +8,11 @@ namespace libre_pensador_api.CRUD
 {
     public class Customers : ICustomersService
     {
-        private readonly LoyverseApiClient _loyverseApiClient;
+        private readonly LoyverseCustomersApiClient _loyverseApiClient;
         private readonly CafeLibrePensadorDbContext _dbContext;
         private readonly ILoggingService _logger;
 
-        public Customers(LoyverseApiClient loyverseApiClient, CafeLibrePensadorDbContext dbContext, ILoggingService loggingService)
+        public Customers(LoyverseCustomersApiClient loyverseApiClient, CafeLibrePensadorDbContext dbContext, ILoggingService loggingService)
         {
             this._loyverseApiClient = loyverseApiClient;
             this._dbContext = dbContext;

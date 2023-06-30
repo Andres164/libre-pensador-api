@@ -80,7 +80,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddHttpClient<LoyverseApiClient>(client =>
+builder.Services.AddHttpClient<LoyverseCustomersApiClient>(client =>
 {
     var accessToken = builder.Configuration["Loyverse:AccessToken"];
     client.BaseAddress = new Uri("https://api.loyverse.com/");
@@ -123,7 +123,7 @@ builder.Services.AddControllers()
     .AddApplicationPart(typeof(ErrorLogsController).Assembly);
 
 builder.Services.AddControllers()
-    .AddApplicationPart(typeof(LoyverseController).Assembly)
+    .AddApplicationPart(typeof(LoyverseCustomersController).Assembly)
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.Converters.Add(new DateOnlyConverter());
