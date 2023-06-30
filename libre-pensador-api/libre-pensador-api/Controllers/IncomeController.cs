@@ -9,19 +9,19 @@ namespace libre_pensador_api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SalesController : ControllerBase
+    public class IncomeController : ControllerBase
     {
-        public ISalesService Sales { get; set; }
+        public IPeriodIncomeService Sales { get; set; }
 
-        public SalesController(ISalesService salesService)
+        public IncomeController(IPeriodIncomeService salesService)
         {
             this.Sales = salesService;
         }
 
         // GET: api/<SalesController>
         [HttpGet]
-        [ProducesResponseType(200, Type = typeof(Sale))]
-        public IActionResult Get([FromBody] SalesRequest request)
+        [ProducesResponseType(200, Type = typeof(PeriodIncome))]
+        public IActionResult Get([FromBody] PeriodIncomeRequest request)
         {
             throw new NotImplementedException();
         }

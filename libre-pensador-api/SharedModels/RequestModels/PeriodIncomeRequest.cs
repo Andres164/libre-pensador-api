@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace SharedModels.RequestModels
 {
-    public class SalesRequest
+    public class PeriodIncomeRequest
     {
+        public DateOnly PeriodStart { get; set; }
+        public DateOnly PeriodEnd { get; set;}
     }
 }

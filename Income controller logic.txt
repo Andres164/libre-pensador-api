@@ -16,12 +16,12 @@ total_money
 
 Quiero saber ganancias del mes
 1- request to librePensador/api/earnings
-   EarningsRequest:
+   PeriodIncomeRequest:
    - PeriodStart	DateOnly
    - PeriodEnd  	DateOnly
 
-2- Map EarningsRequest to ReceiptsRequest
-   EarningsRequestMapper.ToLoyverseReceiptsRequest()
+2- Map PeriodIncomeRequest to ReceiptsRequest
+   IncomeRequestMapper.ToLoyverseReceiptsRequest()
    - PeriodStart -> created_at_min
    - PeriodEnd   -> created_at_max
 

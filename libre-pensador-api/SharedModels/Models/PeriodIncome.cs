@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SharedModels.Models
 {
-    public class Sale
+    public class PeriodIncome
     {
     }
 }

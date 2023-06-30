@@ -28,7 +28,7 @@ namespace libre_pensador_api.Loyverse
             if (customer == null)
                 return null;
             var jsonCustomer = JObject.Parse(customer);
-            float updatedPoints = (float)jsonCustomer["total_points"] + pointsToAdd;
+            float updatedPoints = (float)jsonCustomer["total_points"]! + pointsToAdd;
             jsonCustomer["total_points"] = updatedPoints;
             var updatedCustomer = JsonConvert.SerializeObject(jsonCustomer);
 
@@ -120,6 +120,8 @@ namespace libre_pensador_api.Loyverse
             var rawCustomerInfo = await response.Content.ReadAsStringAsync();
             return rawCustomerInfo;
         }
+
+
     }
 
 }
