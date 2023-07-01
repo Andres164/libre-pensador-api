@@ -11,11 +11,11 @@ namespace libre_pensador_api.Controllers
     [ApiController]
     public class IncomeController : ControllerBase
     {
-        public IPeriodIncomeService Sales { get; set; }
+        public IPeriodIncomeService IncomeService { get; set; }
 
-        public IncomeController(IPeriodIncomeService salesService)
+        public IncomeController(IPeriodIncomeService incomeService)
         {
-            this.Sales = salesService;
+            this.IncomeService  = incomeService;
         }
 
         // GET: api/<SalesController>
@@ -23,7 +23,7 @@ namespace libre_pensador_api.Controllers
         [ProducesResponseType(200, Type = typeof(PeriodIncome))]
         public IActionResult Get([FromBody] PeriodIncomeRequest request)
         {
-            throw new NotImplementedException();
+            
         }
     }
 }

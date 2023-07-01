@@ -1,6 +1,10 @@
-﻿namespace libre_pensador_api.Interfaces
+﻿using SharedModels.Models;
+using SharedModels.RequestModels;
+
+namespace libre_pensador_api.Interfaces
 {
-    public class IPeriodIncomeService
+    public interface IPeriodIncomeService
     {
+        Task<PeriodIncome> Read(PeriodIncomeRequest request);
     }
 }

@@ -40,6 +40,24 @@ namespace libre_pensador_api.CRUD
                 throw;
             }
         }
+
+        public List<Expense> ReadPeriod(DateTime periodStart, DateTime periodEnd)
+        {
+            try
+            {
+                List<Expense> expenses = this._dbContext.Expenses
+                    .Where(e => e.Date > periodStart && e.Date < periodEnd)
+                    .OrderByDescending(e => e.Date)
+                    .ToList();
+                return expenses;
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogError(ex);
+                throw;
+            }
+        }
+
         public ExpenseViewModel? Read(int expenseId)
         {
             try
@@ -57,6 +75,7 @@ namespace libre_pensador_api.CRUD
                 throw;
             }
         }
+
         public Expense? Create(ExpenseRequest newExpense)
         {
             try
@@ -72,6 +91,7 @@ namespace libre_pensador_api.CRUD
                 throw;
             }
         }
+
         public Expense? Delete(int expenseId)
         {
             try
@@ -89,6 +109,7 @@ namespace libre_pensador_api.CRUD
                 throw;
             }
         }
+
         public Expense? Update(int expenseId, ExpenseRequest updatedExpense)
         {
             try

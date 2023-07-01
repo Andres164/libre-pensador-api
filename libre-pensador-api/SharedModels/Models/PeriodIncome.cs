@@ -8,5 +8,7 @@ namespace SharedModels.Models
 {
     public class PeriodIncome
     {
+        public double IncomeBeforeTaxes { get; set; } = 0;
+        public double NetIncome { get; set; } = 0;
     }
 }
