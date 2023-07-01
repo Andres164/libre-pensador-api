@@ -19,7 +19,7 @@ namespace libre_pensador_api.CRUD
             this._expenses = expensesService;
         }
 
-        public async Task<PeriodIncome> Read(PeriodIncomeRequest request)
+        public async Task<PeriodIncome> ReadAsync(PeriodIncomeRequest request)
         {
             ReceiptRequest receiptRequest = PeriodIncomeRequestMapper.ToLoyverseReceiptsRequest(request);
 

@@ -15,7 +15,7 @@ total_money
 
 
 Quiero saber ganancias del mes
-1- request to librePensador/api/earnings
+1- request to librePensador/api/PeriodIncome
    PeriodIncomeRequest:
    - PeriodStart	DateOnly
    - PeriodEnd  	DateOnly

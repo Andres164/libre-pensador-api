@@ -80,7 +80,14 @@ builder.Services.AddCors(options =>
     });
 });
 
+
 builder.Services.AddHttpClient<LoyverseCustomersApiClient>(client =>
+{
+    var accessToken = builder.Configuration["Loyverse:AccessToken"];
+    client.BaseAddress = new Uri("https://api.loyverse.com/");
+    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+});
+builder.Services.AddHttpClient<LoyverseReceiptsApiClient>(client =>
 {
     var accessToken = builder.Configuration["Loyverse:AccessToken"];
     client.BaseAddress = new Uri("https://api.loyverse.com/");
@@ -100,18 +107,15 @@ builder.Services.AddScoped<ICustomersService, Customers>();
 builder.Services.AddScoped<IUserService, Users>();
 builder.Services.AddScoped<IExpensesService, Expenses>();
 builder.Services.AddScoped<IExpenseCategoriesService, ExpenseCategories>();
+builder.Services.AddScoped<IPeriodIncomeService,  PeriodIncomeService>();
 
 builder.Services.AddControllers()
-    .AddApplicationPart(typeof(AuthenticationController).Assembly);
-
-builder.Services.AddControllers()
-    .AddApplicationPart(typeof(CardsController).Assembly);
-
-builder.Services.AddControllers()
-    .AddApplicationPart(typeof(CustomersController).Assembly);
-
-builder.Services.AddControllers()
-    .AddApplicationPart(typeof(ExpensesController).Assembly);
+    .AddApplicationPart(typeof(AuthenticationController).Assembly)
+    .AddApplicationPart(typeof(CardsController).Assembly)
+    .AddApplicationPart(typeof(CustomersController).Assembly)
+    .AddApplicationPart(typeof(ExpensesController).Assembly)
+    .AddApplicationPart(typeof(ExpenseCategoriesController).Assembly)
+    .AddApplicationPart(typeof(IncomeController).Assembly);
 
 var emailSection = builder.Configuration.GetSection("Email");
 var senderMailboxAddress = new MailboxAddress(emailSection["LogSenderName"], emailSection["LogSenderEmail"]);
