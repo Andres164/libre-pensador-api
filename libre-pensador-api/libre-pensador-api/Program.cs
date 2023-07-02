@@ -107,7 +107,7 @@ builder.Services.AddScoped<ICustomersService, Customers>();
 builder.Services.AddScoped<IUserService, Users>();
 builder.Services.AddScoped<IExpensesService, Expenses>();
 builder.Services.AddScoped<IExpenseCategoriesService, ExpenseCategories>();
-builder.Services.AddScoped<IPeriodIncomeService,  PeriodIncomeService>();
+builder.Services.AddScoped<IProfitPerPeriodsService,  ProfitPerPeriodsService>();
 
 builder.Services.AddControllers()
     .AddApplicationPart(typeof(AuthenticationController).Assembly)
@@ -115,7 +115,7 @@ builder.Services.AddControllers()
     .AddApplicationPart(typeof(CustomersController).Assembly)
     .AddApplicationPart(typeof(ExpensesController).Assembly)
     .AddApplicationPart(typeof(ExpenseCategoriesController).Assembly)
-    .AddApplicationPart(typeof(IncomeController).Assembly);
+    .AddApplicationPart(typeof(ProfitsController).Assembly);
 
 var emailSection = builder.Configuration.GetSection("Email");
 var senderMailboxAddress = new MailboxAddress(emailSection["LogSenderName"], emailSection["LogSenderEmail"]);

@@ -7,24 +7,24 @@ namespace libre_pensador_api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class IncomeController : ControllerBase
+    public class ProfitsController : ControllerBase
     {
-        private readonly IPeriodIncomeService _incomeService;
+        private readonly IProfitPerPeriodsService _incomeService;
 
-        public IncomeController(IPeriodIncomeService incomeService)
+        public ProfitsController(IProfitPerPeriodsService incomeService)
         {
             this._incomeService = incomeService;
         }
 
         // GET: api/<IncomeController>
-        [HttpPost]
-        [ProducesResponseType(200, Type = typeof(PeriodIncome))]
+        [HttpGet("{period}")]
+        [ProducesResponseType(200, Type = typeof(ProfitOfPeriod))]
         [ProducesResponseType(502)]
-        public async Task<IActionResult> Get([FromBody] PeriodIncomeRequest request)
+        public async Task<IActionResult> Get(ProfitOfPeriodRequest period)
         {
             try
             {
-                var peroidIncome = await this._incomeService.ReadAsync(request);
+                var peroidIncome = await this._incomeService.ReadAsync(period);
                 return Ok(peroidIncome);
             }
             catch (HttpRequestException ex)

@@ -3,8 +3,8 @@ using SharedModels.RequestModels;
 
 namespace libre_pensador_api.Interfaces
 {
-    public interface IPeriodIncomeService
+    public interface IProfitPerPeriodsService
     {
-        Task<PeriodIncome> ReadAsync(PeriodIncomeRequest request);
+        Task<ProfitOfPeriod> ReadAsync(ProfitOfPeriodRequest request);
     }
 }

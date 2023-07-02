@@ -3,9 +3,9 @@ using SharedModels.RequestModels;
 
 namespace libre_pensador_api.Mappers
 {
-    public static class PeriodIncomeRequestMapper
+    public static class ProfitOfPeriodMapper
     {
-        public static ReceiptRequest ToLoyverseReceiptsRequest(PeriodIncomeRequest periodIncomeRequest)
+        public static ReceiptRequest RequestToLoyverseReceiptsRequest(ProfitOfPeriodRequest periodIncomeRequest)
         {
             return new ReceiptRequest
             {

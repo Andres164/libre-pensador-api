@@ -8,24 +8,24 @@ using SharedModels.RequestModels;
 
 namespace libre_pensador_api.CRUD
 {
-    public class PeriodIncomeService : IPeriodIncomeService
+    public class ProfitPerPeriodsService : IProfitPerPeriodsService
     {
         private readonly LoyverseReceiptsApiClient _loyverseReceipts;
         private readonly IExpensesService _expenses;
 
-        public PeriodIncomeService(LoyverseReceiptsApiClient loyverseReceiptsApiClient, IExpensesService expensesService)
+        public ProfitPerPeriodsService(LoyverseReceiptsApiClient loyverseReceiptsApiClient, IExpensesService expensesService)
         {
             this._loyverseReceipts = loyverseReceiptsApiClient;
             this._expenses = expensesService;
         }
 
-        public async Task<PeriodIncome> ReadAsync(PeriodIncomeRequest request)
+        public async Task<ProfitOfPeriod> ReadAsync(ProfitOfPeriodRequest request)
         {
-            ReceiptRequest receiptRequest = PeriodIncomeRequestMapper.ToLoyverseReceiptsRequest(request);
+            ReceiptRequest receiptRequest = ProfitOfPeriodMapper.RequestToLoyverseReceiptsRequest(request);
 
             List<ReceiptViewModel> receipts = await this._loyverseReceipts.GetReceiptsAsync(receiptRequest);
              
-            PeriodIncome periodIncome = new PeriodIncome();
+            ProfitOfPeriod periodIncome = new ProfitOfPeriod();
             foreach (var receipt in receipts)
             {
                 if (receipt.ReceiptType == ReceiptViewModel.ReceiptTypes.SALE)

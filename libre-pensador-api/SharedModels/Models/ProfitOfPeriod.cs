@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SharedModels.Models
 {
-    public class PeriodIncome
+    public class ProfitOfPeriod
     {
         public double IncomeBeforeTaxes { get; set; } = 0;
         public double NetIncome { get; set; } = 0;
