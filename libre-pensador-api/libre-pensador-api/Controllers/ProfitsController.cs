@@ -17,11 +17,16 @@ namespace libre_pensador_api.Controllers
         }
 
         // GET: api/<IncomeController>
-        [HttpGet("{period}")]
+        [HttpGet]
         [ProducesResponseType(200, Type = typeof(ProfitOfPeriod))]
         [ProducesResponseType(502)]
-        public async Task<IActionResult> Get(ProfitOfPeriodRequest period)
+        public async Task<IActionResult> Get([FromQuery] DateOnly periodStart, [FromQuery] DateOnly periodEnd)
         {
+            ProfitOfPeriodRequest period = new ProfitOfPeriodRequest()
+            {
+                PeriodStart = periodStart,
+                PeriodEnd = periodEnd
+            };
             try
             {
                 var peroidIncome = await this._incomeService.ReadAsync(period);
@@ -29,6 +34,8 @@ namespace libre_pensador_api.Controllers
             }
             catch (HttpRequestException ex)
             {
+                if (ex.StatusCode == null || (int)ex.StatusCode < 500)
+                    throw;
                 return StatusCode(502, ex.Message);
             }
         }

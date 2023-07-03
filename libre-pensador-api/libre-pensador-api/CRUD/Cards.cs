@@ -1,5 +1,4 @@
-﻿using libre_pensador_api.Exceptions;
-using libre_pensador_api.Interfaces;
+﻿using libre_pensador_api.Interfaces;
 using libre_pensador_api.Models;
 using Microsoft.CodeAnalysis;
 
@@ -52,7 +51,7 @@ namespace libre_pensador_api.CRUD
                     ILocalCustomerService localCustomerService = new CRUD.LocalCustomers(this._dbContext, this._logger);
                     Models.LocalCustomer? customer = localCustomerService.ReadWithDecryptedEmail(updatedEmail);
                     if (customer == null)
-                        throw new Exceptions.BadRequestException($"Customer with email {updatedEmail} not found.");
+                        throw new HttpRequestException($"Customer with email {updatedEmail} not found. The given email must be an existing", null, System.Net.HttpStatusCode.BadRequest);
                     updatedEmail = customer.EncryptedEmail;
                 }
 
@@ -63,7 +62,7 @@ namespace libre_pensador_api.CRUD
                 this._dbContext.SaveChanges();
                 return cardToUpdate;
             }
-            catch(BadRequestException)
+            catch(HttpRequestException)
             { 
                 throw;
             }

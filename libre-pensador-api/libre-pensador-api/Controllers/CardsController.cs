@@ -54,9 +54,11 @@ namespace libre_pensador_api.Controllers
             {
                 updatedCard = this._cards.Update(id, requestBody.CustomerEmail);
             }
-            catch (Exceptions.BadRequestException ex)
+            catch (HttpRequestException ex)
             {
-                return BadRequest(ex.Message);
+                if(ex.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                    return BadRequest(ex.Message);
+                throw;
             }
             if(updatedCard == null) 
                 return NotFound();

@@ -37,7 +37,7 @@ namespace libre_pensador_api.Loyverse
 
             var response = await _httpClient.SendAsync(request);
             if ((int)response.StatusCode >= 500)
-                throw new HttpRequestException("Received a server error (500 level status code) from the Loyverse API while updating the customer.");
+                throw new HttpRequestException("Received a server error (500 level status code) from the Loyverse API while updating the customer.", null, System.Net.HttpStatusCode.BadGateway);
             if ((int)response.StatusCode >= 400)
                 return null;
 
@@ -113,7 +113,7 @@ namespace libre_pensador_api.Loyverse
 
             var response = await this._httpClient.SendAsync(request);
             if((int)response.StatusCode >= 500)
-                throw new HttpRequestException("Received a server error (500 level status code) from the Loyverse API While trying to Get the customer.");
+                throw new HttpRequestException("Received a server error (500 level status code) from the Loyverse API While trying to Get the customer.", null, System.Net.HttpStatusCode.BadGateway);
             if ((int)response.StatusCode >= 400)
                 return null;
             var rawCustomerInfo = await response.Content.ReadAsStringAsync();
