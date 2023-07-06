@@ -8,7 +8,9 @@ namespace SharedModels.RequestModels
 {
     public class ProfitOfPeriodRequest
     {
-        public DateOnly PeriodStart { get; set; }
-        public DateOnly PeriodEnd { get; set;}
+        public enum TimeLapses { Day = 2, Month = 1, Year = 0 }
+        public DateTime PeriodStart { get; set; }
+        public DateTime PeriodEnd { get; set; }
+        public TimeLapses PeriodDivision { get; set; }
     }
 }

@@ -1,0 +1,10 @@
+nextSubPeriodStartDate = GetSubstractionOfDate(subPeriodDuration, request.PeriodEnd)
+currentSubPeriodIndex = 0
+
+for each receipt
+ if(receipt.Date <= nextSubPeriodStartDate)
+ {
+    nextSubPeriodStartDate = GetSubstractionOfDate(subPeriodDuration, nextSubPeriodStartDate)
+    currentSubPeriodIndex++
+ }
+ 

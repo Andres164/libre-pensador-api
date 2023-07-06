@@ -21,40 +21,41 @@ namespace libre_pensador_api.CRUD
             this._loggingService = loggingService;
         }
 
-        public async Task<ProfitOfPeriod> ReadAsync(ProfitOfPeriodRequest request)
+        public async Task<List<ProfitOfPeriod>> ReadAsync(ProfitOfPeriodRequest request)
         {
             try
             {
-                ReceiptRequest receiptRequest = ProfitOfPeriodMapper.RequestToLoyverseReceiptsRequest(request);
-                List<ReceiptViewModel> receipts = await this._loyverseReceipts.GetReceiptsAsync(receiptRequest);
+                ReceiptRequest loyverseReceiptRequest = ProfitOfPeriodMapper.RequestToLoyverseReceiptsRequest(request);
+                List<ReceiptViewModel> receipts = await this._loyverseReceipts.GetReceiptsAsync(loyverseReceiptRequest);
 
-                ProfitOfPeriod periodIncome = new ProfitOfPeriod();
+                List<ProfitOfPeriod> periodsIncome = new List<ProfitOfPeriod>();
+                
                 foreach (var receipt in receipts)
                 {
                     if (receipt.ReceiptType == ReceiptViewModel.ReceiptTypes.SALE)
                     {
-                        periodIncome.IncomeBeforeTaxes += receipt.total_money + receipt.total_tax;
-                        periodIncome.NetIncome += receipt.total_money;
+                        periodsIncome.IncomeBeforeTaxes += receipt.total_money + receipt.total_tax;
+                        periodsIncome.NetIncome += receipt.total_money;
                     }
                     else
                     {
-                        periodIncome.IncomeBeforeTaxes -= receipt.total_money + receipt.total_tax;
-                        periodIncome.NetIncome -= receipt.total_money;
+                        periodsIncome.IncomeBeforeTaxes -= receipt.total_money + receipt.total_tax;
+                        periodsIncome.NetIncome -= receipt.total_money;
                     }
                 }
 
-                DateTime periodStart = receiptRequest.created_at_min,
-                         periodEnd = receiptRequest.created_at_max;
+                DateTime periodStart = loyverseReceiptRequest.created_at_min,
+                         periodEnd = loyverseReceiptRequest.created_at_max;
                 List<Expense> periodExpenses = this._expenses.ReadPeriod(periodStart, periodEnd);
 
                 double totalPeriodExpenses = 0;
                 foreach (Expense expense in periodExpenses)
                     totalPeriodExpenses += Convert.ToDouble(expense.AmountSpent);
 
-                periodIncome.IncomeBeforeTaxes -= totalPeriodExpenses;
-                periodIncome.NetIncome -= totalPeriodExpenses;
+                periodsIncome.IncomeBeforeTaxes -= totalPeriodExpenses;
+                periodsIncome.NetIncome -= totalPeriodExpenses;
 
-                return periodIncome;
+                return periodsIncome;
             }
             catch(HttpRequestException)
             {
@@ -65,6 +66,12 @@ namespace libre_pensador_api.CRUD
                 this._loggingService.LogError(ex);
                 throw;
             }
+        }
+
+        private int GetDateSubPeriod(DateTime date, int period)
+        {
+            string[] splitedDate = date.ToString().Split('-');
+            return splitedDate[period];
         }
     }
 }

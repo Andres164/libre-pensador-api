@@ -5,6 +5,6 @@ namespace libre_pensador_api.Interfaces
 {
     public interface IProfitPerPeriodsService
     {
-        Task<ProfitOfPeriod> ReadAsync(ProfitOfPeriodRequest request);
+        Task<List<ProfitOfPeriod>> ReadAsync(ProfitOfPeriodRequest request);
     }
 }

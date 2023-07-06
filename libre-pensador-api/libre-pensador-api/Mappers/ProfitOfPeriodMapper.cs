@@ -9,8 +9,8 @@ namespace libre_pensador_api.Mappers
         {
             return new ReceiptRequest
             {
-                created_at_min = periodIncomeRequest.PeriodStart.ToDateTime(TimeOnly.MinValue),
-                created_at_max = periodIncomeRequest.PeriodEnd.ToDateTime(TimeOnly.MinValue)
+                created_at_min = periodIncomeRequest.PeriodStart,
+                created_at_max = periodIncomeRequest.PeriodEnd
             };
         }
     }
