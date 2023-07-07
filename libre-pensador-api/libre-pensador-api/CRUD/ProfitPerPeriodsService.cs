@@ -23,54 +23,66 @@ namespace libre_pensador_api.CRUD
 
         public async Task<List<ProfitOfPeriod>> ReadAsync(ProfitOfPeriodRequest request)
         {
-            try
+            ReceiptRequest loyverseReceiptRequest = ProfitOfPeriodMapper.RequestToLoyverseReceiptsRequest(request);
+            List<ReceiptViewModel> receipts = await this._loyverseReceipts.GetReceiptsAsync(loyverseReceiptRequest);
+            // DEBUGGING
+            Console.WriteLine("***Receipts count: "+ receipts.Count);
+            //
+            List<ProfitOfPeriod> profitPerSubPeriod = new List<ProfitOfPeriod>() { new ProfitOfPeriod() };
+
+            DateTime nextSubPeriodStartDate = ProfitOfPeriodRequest.GetSubstractTimeLapseToDate(request.PeriodEnd, request.PeriodDivision);
+            int currentSubPeriodIndex = 0;
+
+            var receiptsEnumerator = receipts.GetEnumerator();
+            receiptsEnumerator.MoveNext();
+            while (receiptsEnumerator.Current != null) 
             {
-                ReceiptRequest loyverseReceiptRequest = ProfitOfPeriodMapper.RequestToLoyverseReceiptsRequest(request);
-                List<ReceiptViewModel> receipts = await this._loyverseReceipts.GetReceiptsAsync(loyverseReceiptRequest);
-
-                List<ProfitOfPeriod> profitPerSubPeriod = new List<ProfitOfPeriod>() { new ProfitOfPeriod() };
-
-                DateTime nextSubPeriodStartDate = ProfitOfPeriodRequest.GetSubstractTimeLapseToDate(request.PeriodEnd, request.PeriodDivision);
-                int currentSubPeriodIndex = 0;
-
-                var receiptsEnumerator = receipts.GetEnumerator();
-                while (receiptsEnumerator.Current != null) 
+                // DEBUGGING
+                Console.WriteLine("***Entered receipts while loop***");
+                if(receiptsEnumerator.Current.receipt_date <= nextSubPeriodStartDate)
                 {
-                    if(receiptsEnumerator.Current.receipt_date <= nextSubPeriodStartDate)
-                    {
-                        nextSubPeriodStartDate = ProfitOfPeriodRequest.GetSubstractTimeLapseToDate(nextSubPeriodStartDate, request.PeriodDivision);
-                        profitPerSubPeriod.Add(new ProfitOfPeriod()); // Fields of ProfitOfPeriod are initialized as 0, no need to do it manually here
-                        currentSubPeriodIndex++;
-                    }
-                    else
-                    {
-                        profitPerSubPeriod[currentSubPeriodIndex] = AddReceiptToProfitOfPeriod(profitPerSubPeriod[currentSubPeriodIndex], receiptsEnumerator.Current);
-                        receiptsEnumerator.MoveNext();
-                    }
+                    nextSubPeriodStartDate = ProfitOfPeriodRequest.GetSubstractTimeLapseToDate(nextSubPeriodStartDate, request.PeriodDivision);
+                    profitPerSubPeriod.Add(new ProfitOfPeriod()); // Fields of ProfitOfPeriod are initialized as 0, no need to do it manually here
+                    currentSubPeriodIndex++;
                 }
-
-                DateTime periodStart = loyverseReceiptRequest.created_at_min,
-                         periodEnd = loyverseReceiptRequest.created_at_max;
-                List<Expense> periodExpenses = this._expenses.ReadPeriod(periodStart, periodEnd);
-
-                double totalPeriodExpenses = 0;
-                foreach (Expense expense in periodExpenses)
-                    totalPeriodExpenses += Convert.ToDouble(expense.AmountSpent);
-
-                profitPerSubPeriod.IncomeBeforeTaxes -= totalPeriodExpenses;
-                profitPerSubPeriod.NetIncome -= totalPeriodExpenses;
-
-                return profitPerSubPeriod;
+                else
+                {
+                    profitPerSubPeriod[currentSubPeriodIndex] = AddReceiptToProfitOfPeriod(profitPerSubPeriod[currentSubPeriodIndex], receiptsEnumerator.Current);
+                    receiptsEnumerator.MoveNext();
+                }
             }
-            catch(HttpRequestException)
+            receiptsEnumerator.Dispose();
+            
+            DateTime periodStart = loyverseReceiptRequest.created_at_min,
+                     periodEnd = loyverseReceiptRequest.created_at_max;
+            List<Expense> periodExpenses = this._expenses.ReadPeriod(periodStart, periodEnd);
+                        
+            nextSubPeriodStartDate = ProfitOfPeriodRequest.GetSubstractTimeLapseToDate(request.PeriodEnd, request.PeriodDivision);
+            currentSubPeriodIndex = 0;
+
+            var expensesEnumerator = periodExpenses.GetEnumerator();
+            expensesEnumerator.MoveNext();
+            while (expensesEnumerator.Current != null)
             {
-                throw;
+                // DEBUGGING
+                Console.WriteLine("***Entered Expenses while loop***");
+                if (expensesEnumerator.Current.Date <= nextSubPeriodStartDate)
+                {
+                    nextSubPeriodStartDate = ProfitOfPeriodRequest.GetSubstractTimeLapseToDate(nextSubPeriodStartDate, request.PeriodDivision);
+                    currentSubPeriodIndex++;
+                    if(currentSubPeriodIndex == (profitPerSubPeriod.Count-1))
+                        profitPerSubPeriod.Add(new ProfitOfPeriod());
+                }
+                else
+                {
+                    profitPerSubPeriod[currentSubPeriodIndex].IncomeBeforeTaxes -= (double)expensesEnumerator.Current.AmountSpent;
+                    profitPerSubPeriod[currentSubPeriodIndex].NetIncome -= (double)expensesEnumerator.Current.AmountSpent;
+                    expensesEnumerator.MoveNext();
+                }
             }
-            catch (Exception ex)
-            {
-                this._loggingService.LogError(ex);
-                throw;
-            }
+            expensesEnumerator.Dispose();
+
+            return profitPerSubPeriod;
         }
 
         private ProfitOfPeriod AddReceiptToProfitOfPeriod(ProfitOfPeriod profitOfPeriod, ReceiptViewModel receipt)

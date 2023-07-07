@@ -18,15 +18,13 @@ namespace libre_pensador_api.Controllers
 
         // GET: api/<IncomeController>
         [HttpGet]
-        [ProducesResponseType(200, Type = typeof(ProfitOfPeriod))]
+        [ProducesResponseType(200, Type = typeof(List<ProfitOfPeriod>))]
         [ProducesResponseType(502)]
-        public async Task<IActionResult> Get([FromQuery] ProfitOfPeriodRequest mainPeriod, [FromQuery] List<ProfitOfPeriodRequest> subPeriods)
+        public async Task<IActionResult> Get([FromQuery] ProfitOfPeriodRequest periodsRequest)
         {
             try
             {
-                int[] periodsIncome = new int[periods.Count];
-                foreach(var period in periods)
-                var peroidIncome = await this._incomeService.ReadAsync(period);
+                var peroidIncome = await this._incomeService.ReadAsync(periodsRequest);
                 return Ok(peroidIncome);
             }
             catch (HttpRequestException ex)

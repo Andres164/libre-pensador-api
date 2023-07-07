@@ -20,7 +20,7 @@ namespace SharedModels.RequestModels
                TimeLapses.Day => date.AddDays(-1),
                TimeLapses.Month => date.AddMonths(-1),
                TimeLapses.Year => date.AddYears(-1),
-               _ => throw new ArgumentException("The given TimeLaps is not valid")
+               _ => throw new ArgumentException("The given TimeLapse is not valid")
             };
         }
     }
