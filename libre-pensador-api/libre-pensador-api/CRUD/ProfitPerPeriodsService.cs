@@ -28,19 +28,24 @@ namespace libre_pensador_api.CRUD
                 ReceiptRequest loyverseReceiptRequest = ProfitOfPeriodMapper.RequestToLoyverseReceiptsRequest(request);
                 List<ReceiptViewModel> receipts = await this._loyverseReceipts.GetReceiptsAsync(loyverseReceiptRequest);
 
-                List<ProfitOfPeriod> periodsIncome = new List<ProfitOfPeriod>();
-                
-                foreach (var receipt in receipts)
+                List<ProfitOfPeriod> profitPerSubPeriod = new List<ProfitOfPeriod>() { new ProfitOfPeriod() };
+
+                DateTime nextSubPeriodStartDate = ProfitOfPeriodRequest.GetSubstractTimeLapseToDate(request.PeriodEnd, request.PeriodDivision);
+                int currentSubPeriodIndex = 0;
+
+                var receiptsEnumerator = receipts.GetEnumerator();
+                while (receiptsEnumerator.Current != null) 
                 {
-                    if (receipt.ReceiptType == ReceiptViewModel.ReceiptTypes.SALE)
+                    if(receiptsEnumerator.Current.receipt_date <= nextSubPeriodStartDate)
                     {
-                        periodsIncome.IncomeBeforeTaxes += receipt.total_money + receipt.total_tax;
-                        periodsIncome.NetIncome += receipt.total_money;
+                        nextSubPeriodStartDate = ProfitOfPeriodRequest.GetSubstractTimeLapseToDate(nextSubPeriodStartDate, request.PeriodDivision);
+                        profitPerSubPeriod.Add(new ProfitOfPeriod()); // Fields of ProfitOfPeriod are initialized as 0, no need to do it manually here
+                        currentSubPeriodIndex++;
                     }
                     else
                     {
-                        periodsIncome.IncomeBeforeTaxes -= receipt.total_money + receipt.total_tax;
-                        periodsIncome.NetIncome -= receipt.total_money;
+                        profitPerSubPeriod[currentSubPeriodIndex] = AddReceiptToProfitOfPeriod(profitPerSubPeriod[currentSubPeriodIndex], receiptsEnumerator.Current);
+                        receiptsEnumerator.MoveNext();
                     }
                 }
 
@@ -52,10 +57,10 @@ namespace libre_pensador_api.CRUD
                 foreach (Expense expense in periodExpenses)
                     totalPeriodExpenses += Convert.ToDouble(expense.AmountSpent);
 
-                periodsIncome.IncomeBeforeTaxes -= totalPeriodExpenses;
-                periodsIncome.NetIncome -= totalPeriodExpenses;
+                profitPerSubPeriod.IncomeBeforeTaxes -= totalPeriodExpenses;
+                profitPerSubPeriod.NetIncome -= totalPeriodExpenses;
 
-                return periodsIncome;
+                return profitPerSubPeriod;
             }
             catch(HttpRequestException)
             {
@@ -68,10 +73,20 @@ namespace libre_pensador_api.CRUD
             }
         }
 
-        private int GetDateSubPeriod(DateTime date, int period)
+        private ProfitOfPeriod AddReceiptToProfitOfPeriod(ProfitOfPeriod profitOfPeriod, ReceiptViewModel receipt)
         {
-            string[] splitedDate = date.ToString().Split('-');
-            return splitedDate[period];
+            if (receipt.ReceiptType == ReceiptViewModel.ReceiptTypes.SALE)
+            {
+                profitOfPeriod.IncomeBeforeTaxes += receipt.total_money + receipt.total_tax;
+                profitOfPeriod.NetIncome += receipt.total_money;
+            }
+            else
+            {
+                profitOfPeriod.IncomeBeforeTaxes -= receipt.total_money + receipt.total_tax;
+                profitOfPeriod.NetIncome -= receipt.total_money;
+            }
+            return profitOfPeriod;
         }
+
     }
 }

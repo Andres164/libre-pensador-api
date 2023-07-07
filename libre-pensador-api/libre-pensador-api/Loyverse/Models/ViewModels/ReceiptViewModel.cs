@@ -6,16 +6,17 @@
         public double total_money { get; set; }
         public double total_tax { get; set; }
         public string receipt_type { get; set; } = string.Empty; // In Set, ensure that the string is valid type
+        public DateTime receipt_date { get; set; }
         public ReceiptTypes ReceiptType
         {
             get
             {
-                if(this.receipt_type == "SALE")
-                    return ReceiptTypes.SALE;
-                else if(this.receipt_type == "REFUND")
-                    return ReceiptTypes.REFUND;
-
-                throw new Exception("receipt_type has an invalid string value");
+                return this.receipt_type switch
+                {
+                    "SALE" => ReceiptTypes.SALE,
+                    "REFUND" => ReceiptTypes.REFUND,
+                    _ => throw new Exception("receipt_type has an invalid string value")
+                };
             }
         }
     }

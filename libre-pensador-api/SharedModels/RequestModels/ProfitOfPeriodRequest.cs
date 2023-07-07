@@ -8,9 +8,20 @@ namespace SharedModels.RequestModels
 {
     public class ProfitOfPeriodRequest
     {
-        public enum TimeLapses { Day = 2, Month = 1, Year = 0 }
+        public enum TimeLapses { Day, Month, Year }
         public DateTime PeriodStart { get; set; }
         public DateTime PeriodEnd { get; set; }
         public TimeLapses PeriodDivision { get; set; }
+
+        public static DateTime GetSubstractTimeLapseToDate(DateTime date, TimeLapses timeLapseToSubstract)
+        {
+            return timeLapseToSubstract switch
+            {
+               TimeLapses.Day => date.AddDays(-1),
+               TimeLapses.Month => date.AddMonths(-1),
+               TimeLapses.Year => date.AddYears(-1),
+               _ => throw new ArgumentException("The given TimeLaps is not valid")
+            };
+        }
     }
 }
