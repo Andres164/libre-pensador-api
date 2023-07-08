@@ -25,24 +25,26 @@ namespace libre_pensador_api.CRUD
         {
             ReceiptRequest loyverseReceiptRequest = ProfitOfPeriodMapper.RequestToLoyverseReceiptsRequest(request);
             List<ReceiptViewModel> receipts = await this._loyverseReceipts.GetReceiptsAsync(loyverseReceiptRequest);
-            // DEBUGGING
-            Console.WriteLine("***Receipts count: "+ receipts.Count);
-            //
             List<ProfitOfPeriod> profitPerSubPeriod = new List<ProfitOfPeriod>() { new ProfitOfPeriod() };
 
             DateTime nextSubPeriodStartDate = ProfitOfPeriodRequest.GetSubstractTimeLapseToDate(request.PeriodEnd, request.PeriodDivision);
+            while(nextSubPeriodStartDate >= request.PeriodStart)
+            {
+                profitPerSubPeriod.Add(new ProfitOfPeriod()); // Fields of ProfitOfPeriod are initialized as 0, no need to do it manually here
+                nextSubPeriodStartDate = ProfitOfPeriodRequest.GetSubstractTimeLapseToDate(nextSubPeriodStartDate, request.PeriodDivision);
+
+            }
+            
+            nextSubPeriodStartDate = ProfitOfPeriodRequest.GetSubstractTimeLapseToDate(request.PeriodEnd, request.PeriodDivision);
             int currentSubPeriodIndex = 0;
 
             var receiptsEnumerator = receipts.GetEnumerator();
             receiptsEnumerator.MoveNext();
             while (receiptsEnumerator.Current != null) 
             {
-                // DEBUGGING
-                Console.WriteLine("***Entered receipts while loop***");
                 if(receiptsEnumerator.Current.receipt_date <= nextSubPeriodStartDate)
                 {
                     nextSubPeriodStartDate = ProfitOfPeriodRequest.GetSubstractTimeLapseToDate(nextSubPeriodStartDate, request.PeriodDivision);
-                    profitPerSubPeriod.Add(new ProfitOfPeriod()); // Fields of ProfitOfPeriod are initialized as 0, no need to do it manually here
                     currentSubPeriodIndex++;
                 }
                 else
@@ -64,14 +66,10 @@ namespace libre_pensador_api.CRUD
             expensesEnumerator.MoveNext();
             while (expensesEnumerator.Current != null)
             {
-                // DEBUGGING
-                Console.WriteLine("***Entered Expenses while loop***");
                 if (expensesEnumerator.Current.Date <= nextSubPeriodStartDate)
                 {
                     nextSubPeriodStartDate = ProfitOfPeriodRequest.GetSubstractTimeLapseToDate(nextSubPeriodStartDate, request.PeriodDivision);
                     currentSubPeriodIndex++;
-                    if(currentSubPeriodIndex == (profitPerSubPeriod.Count-1))
-                        profitPerSubPeriod.Add(new ProfitOfPeriod());
                 }
                 else
                 {

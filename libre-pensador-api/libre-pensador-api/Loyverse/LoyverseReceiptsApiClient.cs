@@ -19,11 +19,11 @@ namespace libre_pensador_api.Loyverse
         {
             try
             {
-                var jsonRequestBody = JsonConvert.SerializeObject(requestBody);
-
-                var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"{_LoyverseApiUri}/receipts");
+                string createdAtMin = requestBody.created_at_min.ToString("yyyy-MM-ddTHH:mm:ss.fff"),
+                       createdAtMax = requestBody.created_at_max.ToString("yyyy-MM-ddTHH:mm:ss.fff");
+                string uri = $"{_LoyverseApiUri}/receipts?created_at_min={createdAtMin}Z&created_at_max={createdAtMax}Z";
+                var httpRequest = new HttpRequestMessage(HttpMethod.Get, uri);
                 httpRequest.Headers.Add("Authorization", $"Bearer {this._accessToken}");
-                httpRequest.Content = new StringContent(jsonRequestBody, Encoding.UTF8, "application/json");
 
                 var getResponse = await this._httpClient.SendAsync(httpRequest);
                 int responseStatusCode = (int)getResponse.StatusCode;
