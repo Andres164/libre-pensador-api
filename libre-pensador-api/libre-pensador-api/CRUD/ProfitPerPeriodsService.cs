@@ -25,14 +25,19 @@ namespace libre_pensador_api.CRUD
         {
             ReceiptRequest loyverseReceiptRequest = ProfitOfPeriodMapper.RequestToLoyverseReceiptsRequest(request);
             List<ReceiptViewModel> receipts = await this._loyverseReceipts.GetReceiptsAsync(loyverseReceiptRequest);
-            List<ProfitOfPeriod> profitPerSubPeriod = new List<ProfitOfPeriod>() { new ProfitOfPeriod() };
+            List<ProfitOfPeriod> profitPerSubPeriod = new List<ProfitOfPeriod>();
 
-            DateTime nextSubPeriodStartDate = ProfitOfPeriodRequest.GetSubstractTimeLapseToDate(request.PeriodEnd, request.PeriodDivision);
+            DateTime nextSubPeriodStartDate = request.PeriodEnd;
             while(nextSubPeriodStartDate >= request.PeriodStart)
             {
-                profitPerSubPeriod.Add(new ProfitOfPeriod()); // Fields of ProfitOfPeriod are initialized as 0, no need to do it manually here
+                ProfitOfPeriod period = new ProfitOfPeriod()
+                {
+                    PeriodDuration = request.PeriodDivision,
+                    PeriodDate = nextSubPeriodStartDate
+                    // Fields NetIncome and IncomeBeforeTaxes are initialized as 0, no need to do it manually
+                };
+                profitPerSubPeriod.Add(period);
                 nextSubPeriodStartDate = ProfitOfPeriodRequest.GetSubstractTimeLapseToDate(nextSubPeriodStartDate, request.PeriodDivision);
-
             }
             
             nextSubPeriodStartDate = ProfitOfPeriodRequest.GetSubstractTimeLapseToDate(request.PeriodEnd, request.PeriodDivision);
