@@ -23,5 +23,24 @@ namespace SharedModels.RequestModels
                _ => throw new ArgumentException("The given TimeLapse is not valid")
             };
         }
+
+        public static List<string> GetEveryTimeLapseTranslation()
+        {
+            List<string> translatedTimeLapses = new List<string>();
+            var timeLapseEnumerable = Enum.GetValues<TimeLapses>();
+            foreach(var timeLapse in timeLapseEnumerable)
+            {
+
+                string translatedTimeLapse = timeLapse switch
+                {
+                    TimeLapses.Day => "Dia",
+                    TimeLapses.Month => "Mes",
+                    TimeLapses.Year => "Año",
+                    _ => throw new ArgumentException($"The timelaps '{timeLapse}' doesn't have a translation")
+                };
+                translatedTimeLapses.Add(translatedTimeLapse);
+            }
+            return translatedTimeLapses;
+        }
     }
 }
