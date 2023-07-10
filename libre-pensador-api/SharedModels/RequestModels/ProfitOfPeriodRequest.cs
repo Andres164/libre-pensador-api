@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using static SharedModels.RequestModels.ProfitOfPeriodRequest;
 
 namespace SharedModels.RequestModels
 {
@@ -12,35 +14,44 @@ namespace SharedModels.RequestModels
         public DateTime PeriodStart { get; set; }
         public DateTime PeriodEnd { get; set; }
         public TimeLapses PeriodDivision { get; set; }
-
-        public static DateTime GetSubstractTimeLapseToDate(DateTime date, TimeLapses timeLapseToSubstract)
+        public static Dictionary<TimeLapses, string> TimeLapseTranslations { get; } = new Dictionary<TimeLapses, string>()
         {
-            return timeLapseToSubstract switch
+            { TimeLapses.Day, "Dia" },
+            { TimeLapses.Month, "Mes" },
+            { TimeLapses.Year, "Año" }
+        };
+
+        public static DateTime AddTimeLapseToDate(DateTime date, TimeLapses timeLapseToAdd, int amount)
+        {
+            return timeLapseToAdd switch
             {
-               TimeLapses.Day => date.AddDays(-1),
-               TimeLapses.Month => date.AddMonths(-1),
-               TimeLapses.Year => date.AddYears(-1),
+               TimeLapses.Day => date.AddDays(amount),
+               TimeLapses.Month => date.AddMonths(amount),
+               TimeLapses.Year => date.AddYears(amount),
                _ => throw new ArgumentException("The given TimeLapse is not valid")
             };
         }
 
+        public static string GetTimeLapseTranslation(TimeLapses timeLapse)
+        {
+            if (TimeLapseTranslations.TryGetValue(timeLapse, out string? translation))
+                return translation;
+
+            throw new ArgumentException($"The timelapse '{timeLapse}' doesn't have a translation");
+        }
+
         public static List<string> GetEveryTimeLapseTranslation()
         {
-            List<string> translatedTimeLapses = new List<string>();
-            var timeLapseEnumerable = Enum.GetValues<TimeLapses>();
-            foreach(var timeLapse in timeLapseEnumerable)
-            {
+            return TimeLapseTranslations.Values.ToList();
+        }
 
-                string translatedTimeLapse = timeLapse switch
-                {
-                    TimeLapses.Day => "Dia",
-                    TimeLapses.Month => "Mes",
-                    TimeLapses.Year => "Año",
-                    _ => throw new ArgumentException($"The timelaps '{timeLapse}' doesn't have a translation")
-                };
-                translatedTimeLapses.Add(translatedTimeLapse);
-            }
-            return translatedTimeLapses;
+        public static TimeLapses GetTimeLapseFromTranslatedString(string translatedStringTimeLampse)
+        {
+            var keyValuePair = TimeLapseTranslations.FirstOrDefault(x => x.Value == translatedStringTimeLampse);
+            if(keyValuePair.Equals(default(KeyValuePair<TimeLapses, string>)))
+                throw new ArgumentException($"The string '{translatedStringTimeLampse}' doesn't have a corresponding TimeLapse enum value");
+
+            return keyValuePair.Key;
         }
     }
 }

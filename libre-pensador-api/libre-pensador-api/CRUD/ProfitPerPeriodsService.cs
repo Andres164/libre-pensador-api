@@ -37,10 +37,10 @@ namespace libre_pensador_api.CRUD
                     // Fields NetIncome and IncomeBeforeTaxes are initialized as 0, no need to do it manually
                 };
                 profitPerSubPeriod.Add(period);
-                nextSubPeriodStartDate = ProfitOfPeriodRequest.GetSubstractTimeLapseToDate(nextSubPeriodStartDate, request.PeriodDivision);
+                nextSubPeriodStartDate = ProfitOfPeriodRequest.AddTimeLapseToDate(nextSubPeriodStartDate, request.PeriodDivision, -1);
             }
             
-            nextSubPeriodStartDate = ProfitOfPeriodRequest.GetSubstractTimeLapseToDate(request.PeriodEnd, request.PeriodDivision);
+            nextSubPeriodStartDate = ProfitOfPeriodRequest.AddTimeLapseToDate(request.PeriodEnd, request.PeriodDivision, -1);
             int currentSubPeriodIndex = 0;
 
             var receiptsEnumerator = receipts.GetEnumerator();
@@ -49,7 +49,7 @@ namespace libre_pensador_api.CRUD
             {
                 if(receiptsEnumerator.Current.receipt_date <= nextSubPeriodStartDate)
                 {
-                    nextSubPeriodStartDate = ProfitOfPeriodRequest.GetSubstractTimeLapseToDate(nextSubPeriodStartDate, request.PeriodDivision);
+                    nextSubPeriodStartDate = ProfitOfPeriodRequest.AddTimeLapseToDate(nextSubPeriodStartDate, request.PeriodDivision, -1);
                     currentSubPeriodIndex++;
                 }
                 else
@@ -64,7 +64,7 @@ namespace libre_pensador_api.CRUD
                      periodEnd = loyverseReceiptRequest.created_at_max;
             List<Expense> periodExpenses = this._expenses.ReadPeriod(periodStart, periodEnd);
                         
-            nextSubPeriodStartDate = ProfitOfPeriodRequest.GetSubstractTimeLapseToDate(request.PeriodEnd, request.PeriodDivision);
+            nextSubPeriodStartDate = ProfitOfPeriodRequest.AddTimeLapseToDate(request.PeriodEnd, request.PeriodDivision, -1);
             currentSubPeriodIndex = 0;
 
             var expensesEnumerator = periodExpenses.GetEnumerator();
@@ -73,7 +73,7 @@ namespace libre_pensador_api.CRUD
             {
                 if (expensesEnumerator.Current.Date <= nextSubPeriodStartDate)
                 {
-                    nextSubPeriodStartDate = ProfitOfPeriodRequest.GetSubstractTimeLapseToDate(nextSubPeriodStartDate, request.PeriodDivision);
+                    nextSubPeriodStartDate = ProfitOfPeriodRequest.AddTimeLapseToDate(nextSubPeriodStartDate, request.PeriodDivision, -1);
                     currentSubPeriodIndex++;
                 }
                 else
