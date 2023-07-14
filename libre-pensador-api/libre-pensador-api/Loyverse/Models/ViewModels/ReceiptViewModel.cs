@@ -3,8 +3,8 @@
     public class ReceiptViewModel
     {
         public enum ReceiptTypes { SALE, REFUND }
-        public double total_money { get; set; }
-        public double total_tax { get; set; }
+        public decimal total_money { get; set; }
+        public decimal total_tax { get; set; }
         public string receipt_type { get; set; } = string.Empty; // In Set, ensure that the string is valid type
         public DateTime receipt_date { get; set; }
         public ReceiptTypes ReceiptType

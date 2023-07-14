@@ -78,8 +78,8 @@ namespace libre_pensador_api.CRUD
                 }
                 else
                 {
-                    profitPerSubPeriod[currentSubPeriodIndex].IncomeBeforeTaxes -= (double)expensesEnumerator.Current.AmountSpent;
-                    profitPerSubPeriod[currentSubPeriodIndex].NetIncome -= (double)expensesEnumerator.Current.AmountSpent;
+                    profitPerSubPeriod[currentSubPeriodIndex].IncomeBeforeTaxes -= expensesEnumerator.Current.AmountSpent;
+                    profitPerSubPeriod[currentSubPeriodIndex].NetIncome -= expensesEnumerator.Current.AmountSpent;
                     expensesEnumerator.MoveNext();
                 }
             }

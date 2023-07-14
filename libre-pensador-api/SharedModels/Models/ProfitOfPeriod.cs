@@ -11,10 +11,11 @@ namespace SharedModels.Models
 {
     public class ProfitOfPeriod
     {
-        public double IncomeBeforeTaxes { get; set; } = 0;
-        public double NetIncome { get; set; } = 0;
+        public decimal IncomeBeforeTaxes { get; set; } = 0;
+        public decimal NetIncome { get; set; } = 0;
         public TimeLapses PeriodDuration { get; set; }
         public DateTime PeriodDate { get; set; }
+
         public string ShortenedPeriodDate
         {
             get
@@ -26,6 +27,14 @@ namespace SharedModels.Models
                     TimeLapses.Year => this.PeriodDate.ToString("yyyy"),
                     _ => throw new Exception($"The timelaps '{this.PeriodDuration}' doesn't have a conversion in ShortenedPeriodDate")
                 };
+            }
+        }
+
+        public decimal RoundedNetIncome
+        {
+            get
+            {
+                return Math.Round(this.NetIncome, 2);
             }
         }
     }
