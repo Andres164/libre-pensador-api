@@ -146,7 +146,7 @@ public partial class CafeLibrePensadorDbContext : DbContext
                 .HasColumnName("amount_spent");
             entity.Property(e => e.Date)
                 .IsRequired()
-                .HasColumnType("timestamp without time zone")
+                .HasColumnType("timestamp with time zone")
                 .HasColumnName("date");
             entity.Property(e => e.Description)
                 .HasColumnName("description");

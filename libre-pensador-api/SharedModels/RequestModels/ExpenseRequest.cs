@@ -8,5 +8,17 @@
         public decimal AmountSpent { get; set; }
         public DateTime Date { get; set; }
         public string? Description { get; set; } = null;
+
+        public DateTime DateInLocalTime
+        {
+            get
+            {
+                return this.Date.ToLocalTime();
+            }
+            set
+            {
+                this.Date = value.ToUniversalTime();
+            }
+        }
     }
 }
