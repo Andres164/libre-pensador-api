@@ -1,0 +1,20 @@
+Make table
+- client_apps
+  - app_id
+  - name
+  - JWT SecretKey
+
+update UserCredentials
+- add ClientAppId
+- add RememberMe
+
+Rework Authenitcation controller
+- fetch the client app with the credentials clientAppId and 
+   create a JWT token with the entry's JWT SecretKey
+- Set expire date to 14 days after today or at midnight if Remember me 
+   is false
+
+Update AuthenticationService of SharpExpenses
+
+Update Authentication function of SharpLoyalCard
+
