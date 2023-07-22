@@ -8,6 +8,20 @@ update UserCredentials
 - add ClientAppId
 - add RememberMe
 
+Add ClientApp Model
+
+Add entity mapping of client_apps table in CafeLibrePensadorDbContext
+
+Add JwtSecretKeyGenerator
+
+Add ClientAppsService with
+ - Read
+ - Create
+ - Delete
+
+Add ClientAppsManager to
+ - Create and Delete
+
 Rework Authenitcation controller
 - fetch the client app with the credentials clientAppId and 
    create a JWT token with the entry's JWT SecretKey

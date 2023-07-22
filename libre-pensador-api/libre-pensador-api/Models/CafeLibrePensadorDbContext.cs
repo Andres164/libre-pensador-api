@@ -29,6 +29,8 @@ public partial class CafeLibrePensadorDbContext : DbContext
     
     public virtual DbSet<ExpenseCategory> ExpenseCategories { get; set; }
 
+    public virtual DbSet<ClientApp> ClientApps { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Card>(entity =>
@@ -169,6 +171,28 @@ public partial class CafeLibrePensadorDbContext : DbContext
                 .HasMaxLength(40)
                 .IsRequired()
                 .HasColumnName("category_name");
+        });
+
+        modelBuilder.Entity<ClientApp>(entity => 
+        {
+            entity.ToTable("client_apps");
+
+            entity.HasKey(e => e.AppId).HasName("client_apps_pkey");
+
+            entity.Property(e => e.AppId)
+                .IsRequired()
+                .UseIdentityColumn()
+                .HasColumnName("app_id");
+            entity.Property(e => e.Name)
+                .IsRequired()
+                .HasColumnType("character varying")
+                .HasMaxLength(60)
+                .HasColumnName ("name");
+            entity.Property(e => e.EncryptedJwtSecretKey)
+                .IsRequired()
+                .HasConversion(new Converters.EncryptionConverter()!)
+                .HasColumnType("bytea")
+                .HasColumnName("jwt_secret_key");
         });
 
         OnModelCreatingPartial(modelBuilder);
