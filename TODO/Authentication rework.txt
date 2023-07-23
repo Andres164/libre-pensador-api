@@ -14,6 +14,7 @@ Add entity mapping of client_apps table in CafeLibrePensadorDbContext
 
 Add JwtSecretKeyGenerator
 
+Add IClientAppsServices
 Add ClientAppsService with
  - Read
  - Create
