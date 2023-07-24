@@ -1,5 +1,6 @@
 ﻿using libre_pensador_api.Interfaces;
 using libre_pensador_api.Models;
+using libre_pensador_api.Models.ViewModels;
 
 namespace libre_pensador_api.CRUD
 {
@@ -18,9 +19,17 @@ namespace libre_pensador_api.CRUD
             return await this._dbContext.ClientApps.FindAsync(appId);
         }
 
-        public async Task<ClientApp?> CreateAsync(string newAppName)
+        public async Task<ClientApp?> CreateAsync(ClientAppViewModel newApp)
         {
-            
+            ClientApp newAppModel = new ClientApp
+            {
+                AppId = 0,
+                Name = newApp.Name,
+                EncryptedJwtSecretKey = EncryptionUtility.Encrypt(newApp.JwtSecretKey)! // Encrypt method only returns null if argument is null
+            };
+
+            var createdModel = await this._dbContext.ClientApps.AddAsync(newAppModel);
+            return createdModel.Entity;
         }
 
         public async Task<ClientApp?> DeleteAsync(int appId)
