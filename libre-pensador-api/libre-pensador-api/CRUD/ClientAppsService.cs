@@ -12,19 +12,24 @@ namespace libre_pensador_api.CRUD
             this._dbContext = dbContext;
         }
 
-        public Task CreateAsync(string newAppName)
+
+        public async Task<ClientApp?> ReadAppAsync(int appId)
         {
-            throw new NotImplementedException();
+            return await this._dbContext.ClientApps.FindAsync(appId);
         }
 
-        public Task DeleteAsync(int appId)
+        public async Task<ClientApp?> CreateAsync(string newAppName)
         {
-            throw new NotImplementedException();
+            
         }
 
-        public Task<ClientApp> ReadAppAsync(int appId)
+        public async Task<ClientApp?> DeleteAsync(int appId)
         {
-            throw new NotImplementedException();
+            var appToDelete = await this.ReadAppAsync(appId);
+            if (appToDelete == null)
+                return null;
+            var deletedApp = this._dbContext.Remove(appToDelete);
+            return deletedApp.Entity;
         }
     }
 }

@@ -4,8 +4,8 @@ namespace libre_pensador_api.Interfaces
 {
     public interface IClientAppsService
     {
-        Task<ClientApp> ReadAppAsync(int appId);
-        Task CreateAsync(string newAppName);
-        Task DeleteAsync(int appId);
+        Task<ClientApp?> ReadAppAsync(int appId);
+        Task<ClientApp?> CreateAsync(string newAppName);
+        Task<ClientApp?> DeleteAsync(int appId);
     }
 }
