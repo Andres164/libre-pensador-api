@@ -1,6 +1,7 @@
 ﻿using libre_pensador_api.Interfaces;
 using libre_pensador_api.Models;
 using libre_pensador_api.Models.ViewModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace libre_pensador_api.CRUD
 {
@@ -14,7 +15,12 @@ namespace libre_pensador_api.CRUD
         }
 
 
-        public async Task<ClientApp?> ReadAppAsync(int appId)
+        public async Task<List<ClientApp>> ReadAllAsync()
+        {
+            return await this._dbContext.ClientApps.ToListAsync();
+        }
+
+        public async Task<ClientApp?> ReadAsync(int appId)
         {
             return await this._dbContext.ClientApps.FindAsync(appId);
         }
@@ -34,7 +40,7 @@ namespace libre_pensador_api.CRUD
 
         public async Task<ClientApp?> DeleteAsync(int appId)
         {
-            var appToDelete = await this.ReadAppAsync(appId);
+            var appToDelete = await this.ReadAsync(appId);
             if (appToDelete == null)
                 return null;
             var deletedApp = this._dbContext.Remove(appToDelete);
