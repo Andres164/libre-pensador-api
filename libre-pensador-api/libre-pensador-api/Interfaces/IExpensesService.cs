@@ -1,4 +1,5 @@
-﻿using SharedModels.Models;
+﻿using libre_pensador_api.CRUD;
+using SharedModels.Models;
 using SharedModels.Models.RequestModels;
 using SharedModels.Models.ViewModels;
 

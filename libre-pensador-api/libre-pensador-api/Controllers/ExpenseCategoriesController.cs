@@ -14,10 +14,12 @@ namespace libre_pensador_api.Controllers
     public class ExpenseCategoriesController : ControllerBase
     {
         private readonly IExpenseCategoriesService _expenseCategories;
+        private readonly IExpensesService _expenses;
 
-        public ExpenseCategoriesController(IExpenseCategoriesService expenseCategoriesService)
+        public ExpenseCategoriesController(IExpenseCategoriesService expenseCategoriesService, IExpensesService expenses)
         {
             this._expenseCategories = expenseCategoriesService;
+            this._expenses = expenses;
         }
 
         [Authorize]
@@ -68,6 +70,9 @@ namespace libre_pensador_api.Controllers
         [ProducesResponseType(200, Type = typeof(ExpenseCategory))]
         public IActionResult Delete(int id)
         {
+            bool isCategoryReferencedInExpenses = this._expenses.ReadAll().Any(e => e.CategoryId == id);
+            if(isCategoryReferencedInExpenses)
+                return Conflict();
             var deletedCategory = this._expenseCategories.Delete(id);
             if(deletedCategory == null)
                 return NotFound();
