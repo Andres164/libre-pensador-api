@@ -11,5 +11,6 @@ namespace libre_pensador_api.Interfaces
         ExpenseCategory? Create(ExpenseCategoryViewModel newCategory);
         ExpenseCategory? Delete(int categoryId);
         ExpenseCategory? Update(int categoryId, ExpenseCategoryViewModel updatedCategory);
+        bool CanBeDeleted(int categoryId);
     }
 }

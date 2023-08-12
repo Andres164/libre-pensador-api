@@ -14,12 +14,10 @@ namespace libre_pensador_api.Controllers
     public class ExpenseCategoriesController : ControllerBase
     {
         private readonly IExpenseCategoriesService _expenseCategories;
-        private readonly IExpensesService _expenses;
 
-        public ExpenseCategoriesController(IExpenseCategoriesService expenseCategoriesService, IExpensesService expenses)
+        public ExpenseCategoriesController(IExpenseCategoriesService expenseCategoriesService)
         {
             this._expenseCategories = expenseCategoriesService;
-            this._expenses = expenses;
         }
 
         [Authorize]
@@ -70,13 +68,21 @@ namespace libre_pensador_api.Controllers
         [ProducesResponseType(200, Type = typeof(ExpenseCategory))]
         public IActionResult Delete(int id)
         {
-            bool isCategoryReferencedInExpenses = this._expenses.ReadAll().Any(e => e.CategoryId == id);
+            bool isCategoryReferencedInExpenses = this._expenseCategories.CanBeDeleted(id);
             if(isCategoryReferencedInExpenses)
                 return Conflict();
             var deletedCategory = this._expenseCategories.Delete(id);
             if(deletedCategory == null)
                 return NotFound();
             return Ok(deletedCategory);
+        }
+
+        // GET api/<ExpenseCategoriesController>/canBeDeleted/5
+        [HttpGet("canBeDeleted/{id}")]
+        [ProducesResponseType(200, Type = typeof(bool))]
+        public IActionResult CanBeDeleted(int id)
+        {
+            return Ok(this._expenseCategories.CanBeDeleted(id));
         }
     }
 }

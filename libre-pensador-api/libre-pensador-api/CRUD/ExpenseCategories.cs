@@ -10,11 +10,13 @@ namespace libre_pensador_api.CRUD
     public class ExpenseCategories : IExpenseCategoriesService
     {
         private readonly CafeLibrePensadorDbContext _dbContext;
+        private readonly IExpensesService _expensesService;
         private readonly ILoggingService _logger;
 
-        public ExpenseCategories(CafeLibrePensadorDbContext dbContext, ILoggingService loggingService)
+        public ExpenseCategories(CafeLibrePensadorDbContext dbContext, IExpensesService expensesService, ILoggingService loggingService)
         {
             this._dbContext = dbContext;
+            this._expensesService = expensesService;
             this._logger = loggingService;
         }
 
@@ -98,5 +100,20 @@ namespace libre_pensador_api.CRUD
                 throw;
             }
         }
+
+        public bool CanBeDeleted(int categoryId)
+        {
+            try
+            {
+                var allExpenses = this._expensesService.ReadAll();
+                return allExpenses.FirstOrDefault(e => e.CategoryId == categoryId) == null ? true : false;
+            }
+            catch(Exception ex) 
+            {
+                this._logger.LogError(ex);
+                throw;
+            }
+
+}
     }
 }
