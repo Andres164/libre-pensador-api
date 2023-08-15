@@ -68,8 +68,7 @@ namespace libre_pensador_api.Controllers
         [ProducesResponseType(200, Type = typeof(ExpenseCategory))]
         public IActionResult Delete(int id)
         {
-            bool isCategoryReferencedInExpenses = this._expenseCategories.CanBeDeleted(id);
-            if(isCategoryReferencedInExpenses)
+            if (!this._expenseCategories.CanBeDeleted(id))
                 return Conflict();
             var deletedCategory = this._expenseCategories.Delete(id);
             if(deletedCategory == null)
